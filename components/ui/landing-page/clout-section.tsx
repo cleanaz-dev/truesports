@@ -14,7 +14,7 @@ export default function CloutSection() {
         </h3>
         <p className="max-w-3xl mx-auto text-md md:text-lg">
           True Sports is your gateway to unparalleled sports content and engaged
-          audiences. Collaborate with us to customize your brand's sports
+          audiences. Collaborate with us to customize your brand&apos;s sports
           journey and achieve unmatched visibility.
         </p>
       </section>
@@ -29,7 +29,7 @@ export default function CloutSection() {
         </h2>
         <p className="max-w-3xl mx-auto text-md md:text-lg">
           Join True Sports to tap into our vast audience of over 20 million
-          passionate sports fans. Your brand's potential is limitless.
+          passionate sports fans. Your brand&apos;s potential is limitless.
         </p>
       </section>
 

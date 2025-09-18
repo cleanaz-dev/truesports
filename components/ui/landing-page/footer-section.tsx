@@ -15,7 +15,7 @@ export default function FooterSection() {
               Get Started Now
             </h2>
             <p className="text-xs  max-w-2xl">
-              Contact us today to explore the endless possibilities with True Sports. Your brand's sports journey begins here.
+              Contact us today to explore the endless possibilities with True Sports. Your brand&apos;s sports journey begins here.
             </p>
           </div>
 
