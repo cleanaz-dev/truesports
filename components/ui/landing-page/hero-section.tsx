@@ -24,29 +24,31 @@ export default function HeroSection() {
 
       {/* Content */}
       <div className="relative z-20 flex flex-col items-center px-4 text-white">
-        <h1 className="text-2xl md:text-2xl font-bold mb-4 uppercase">
+        <h1 className="text-lg sm:text-2xl md:font-bold mb-3 uppercase text-center">
           Elevate Your Brand
         </h1>
 
-        <p className="max-w-3xl text-lg md:text-5xl font-extrabold  mb-6 uppercase leading-11 tracking-tight">
+        <p className="max-w-3xl text-xl md:text-5xl font-extrabold mb-4 uppercase md:leading-11 tracking-tight text-center">
           Discover how True Sports can skyrocket your brand&apos;s reach and
           influence in the sports world.
         </p>
 
-        <h2 className="text-2xl font-light mb-8">Unleash True Sports Power</h2>
+        <h2 className="text-lg sm:text-2xl font-light mb-6 text-center">
+          Unleash True Sports Power
+        </h2>
 
-        <div className="flex space-x-6">
+        <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 w-full max-w-md">
           <Button
             variant="default"
             size="lg"
-            className="bg-blue-600 rounded-3xl"
+            className="bg-blue-600 rounded-3xl w-full sm:w-auto px-10"
           >
             ABOUT TRUE SPORTS
           </Button>
           <Button
             variant="secondary"
             size="lg"
-            className="bg-transparent border-2 text-white rounded-3xl"
+            className="bg-transparent border-2 text-white rounded-3xl w-full sm:w-auto px-10"
           >
             ADVERTISEMENT OPPORTUNITIES
           </Button>

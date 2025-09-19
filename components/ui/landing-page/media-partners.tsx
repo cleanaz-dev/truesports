@@ -1,12 +1,12 @@
 import React from "react";
 
 const partners = [
-  "/images/partner1.png",
-  "/images/partner2.png",
-  "/images/partner3.png",
-  "/images/partner4.png",
-  "/images/partner5.png",
-  "/images/partner6.png",
+  "/images/partners-1.jpg",
+  "/images/partners-1.jpg",
+  "/images/partners-1.jpg",
+  "/images/partners-1.jpg",
+  "/images/partners-1.jpg",
+  "/images/partners-1.jpg",
 ];
 
 export default function MediaPartners() {
