@@ -70,7 +70,7 @@ export default function Navigation() {
                 <span className="block h-[2px] w-full bg-blue-700 transition-transform duration-300"></span>
               </button>
             </SheetTrigger>
-            <SheetContent side="top" className="bg-[#1a1f24] h-screen flex flex-col items-center justify-center space-y-6 pt-20">
+            <SheetContent side="top" className="bg-[#1a1f24] h-screen flex flex-col items-center justify-center space-y-6">
               <SheetTitle><span className="text-white">Menu</span></SheetTitle>
               {navItems.map((item) => (
                 <Link
