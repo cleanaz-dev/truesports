@@ -27,7 +27,7 @@ export default function Navigation() {
     <nav
       className={clsx(
         "fixed top-0 left-0 w-full z-50 transition-all duration-500 flex items-center",
-        isScrolled ? "bg-[#1a1f24] h-16 sm:h-20 shadow-md" : "bg-transparent h-24"
+        isScrolled ? "bg-[#1a1f24] h-16 sm:h-20 shadow-md" : "bg-transparent h-14 sm:h-24"
       )}
     >
       <div className="max-w-6xl mx-auto px-4 w-full flex items-center justify-between">
