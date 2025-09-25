@@ -18,7 +18,7 @@ const AboutTS: React.FC = () => {
         className="fixed inset-0 bg-cover bg-center will-change-transform -z-10"
         style={{
           backgroundImage: "url(/images/image-2.jpeg)",
-          transform: `translateY(${scrollY * 0.05}px) scale(1.1)`,
+          transform: `translateY(${scrollY * 0.025}px) scale(1.1)`,
         }}
       >
         <div className="absolute inset-0 bg-black/50" />
