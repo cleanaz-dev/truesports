@@ -1,12 +1,12 @@
 import React from "react";
 
 const partners = [
-  "/images/partners-1.jpg",
-  "/images/partners-1.jpg",
-  "/images/partners-1.jpg",
-  "/images/partners-1.jpg",
-  "/images/partners-1.jpg",
-  "/images/partners-1.jpg",
+  "/images/nba-logo.png",
+  "/images/wwe-logo.png",
+  "/images/nfl-logo.png",
+  "/images/cebl-logo.png",
+  "/images/wingsup-logo.svg",
+  "/images/hoopqueens-logo.png",
 ];
 
 export default function MediaPartners() {

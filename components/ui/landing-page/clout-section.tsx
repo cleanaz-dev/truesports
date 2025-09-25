@@ -84,9 +84,9 @@ export default function CloutSection() {
         {/* Overlay for text */}
         <div className="absolute inset-0 flex flex-col items-center justify-center text-white text-center px-6 bg-black/40 space-y-6">
           {/* Play Button */}
-          <button className="bg-blue-600 hover:bg-blue-700 text-white rounded-full w-20 h-20 flex items-center justify-center text-3xl transition-transform transform hover:scale-110">
+          {/* <button className="bg-blue-600 hover:bg-blue-700 text-white rounded-full w-20 h-20 flex items-center justify-center text-3xl transition-transform transform hover:scale-110">
             <FaPlay />
-          </button>
+          </button> */}
 
           <h2 className="text-3xl md:text-7xl font-extrabold mb-4 uppercase leading-6 md:leading-14 px-6 md:px-16">
             Watch True Sports in Action
