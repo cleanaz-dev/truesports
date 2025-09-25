@@ -1,3 +1,4 @@
+import Image from "next/image";
 import React from "react";
 
 const partners = [
@@ -18,11 +19,14 @@ export default function MediaPartners() {
 
       <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 items-center justify-items-center">
         {partners.map((src, index) => (
-          <img
+          <Image
             key={index}
             src={src}
             alt={`Partner ${index + 1}`}
             className="max-h-24 object-contain"
+            width={500}
+            height={500}
+            priority
           />
         ))}
       </div>

@@ -1,6 +1,5 @@
 // app/(public)/layout.tsx
 import Navigation from "@/components/ui/landing-page/navigation";
-import FooterSection from "@/components/ui/landing-page/footer-section";
 
 export default function PublicLayout({ children }: { children: React.ReactNode }) {
   return (

@@ -56,7 +56,7 @@ const AboutTS: React.FC = () => {
               Through True Sports Cares, we support grassroots youth development
               with essential resources like equipment, training, mentorship, and
               camps—uniting communities, celebrating passion, and investing in{" "}
-              <span className="font-semibold">tomorrow's champions</span>.
+              <span className="font-semibold">tomorrow&apos;s champions</span>.
             </p>
           </div>
         </div>

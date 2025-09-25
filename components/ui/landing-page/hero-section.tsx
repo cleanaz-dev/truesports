@@ -45,18 +45,15 @@ export default function HeroSection() {
             className="bg-blue-600 rounded-3xl w-full sm:w-auto px-10"
             asChild
           >
-            <Link 
-              href="/about"
-            >
-            ABOUT TRUE SPORTS
-            </Link>
+            <Link href="/about">ABOUT TRUE SPORTS</Link>
           </Button>
           <Button
             variant="secondary"
             size="lg"
             className="bg-transparent border-2 text-white rounded-3xl w-full sm:w-auto px-10"
+            asChild
           >
-            ADVERTISEMENT OPPORTUNITIES
+            <Link href="/advertisement">ADVERTISEMENT OPPORTUNITIES</Link>
           </Button>
         </div>
       </div>
