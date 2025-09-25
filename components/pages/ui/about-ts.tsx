@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useState } from "react";
-import { FaChartLine, FaHandshake, FaCheckCircle } from "react-icons/fa";
 import React from "react";
 
 const AboutTS: React.FC = () => {
