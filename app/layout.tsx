@@ -34,8 +34,8 @@ export const metadata: Metadata = {
     images: [
       {
         url: "/images/ts-brands/ts-logo-mini-2.png", // ✅ updated path
-        width: 128,
-        height: 128,
+        width: 256,
+        height: 256,
         alt: "True Sports Logo",
       },
     ],
@@ -51,9 +51,9 @@ export const metadata: Metadata = {
     creator: "@TrueSports", // optional: Twitter handle
   },
   icons: {
-    icon: "/images/ts-brands/ts-logo-mini-2.png", // ✅ updated path
-    shortcut: "/images/ts-brands/ts-logo-mini-2.png", // ✅ updated path
-    apple: "/images/ts-brands/ts-logo-mini-2.png", // ✅ updated path
+    icon: "/images/ts-brands/ts-logo-mini.png", // ✅ updated path
+    shortcut: "/images/ts-brands/ts-logo-mini.png", // ✅ updated path
+    apple: "/images/ts-brands/ts-logo-mini.png", // ✅ updated path
   },
 };
 
