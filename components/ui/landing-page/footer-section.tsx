@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { FaYoutube, FaFacebookF, FaInstagram, FaTiktok } from "react-icons/fa";
 
@@ -21,9 +22,11 @@ export default function FooterSection() {
 
           {/* Button */}
           <div className="w-full md:w-auto">
-            <Button className="bg-transparent text-white text-base border-2 rounded-3xl hover:bg-transparent cursor-pointer px-10 py-4 w-full md:w-auto uppercase">
-              Contact Us
-            </Button>
+            <Link href="/contact">
+              <Button className="bg-transparent text-white text-base border-2 rounded-3xl hover:bg-transparent cursor-pointer px-10 py-4 w-full md:w-auto uppercase">
+                Contact Us
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
@@ -34,18 +37,48 @@ export default function FooterSection() {
 
           {/* Footer Links */}
           <div className="flex flex-wrap justify-center md:justify-start gap-6 text-sm sm:text-base">
-            <div className="hover:text-white cursor-pointer">About</div>
-            <div className="hover:text-white cursor-pointer">Contact</div>
-            <div className="hover:text-white cursor-pointer">Advertise</div>
-            <div className="hover:text-white cursor-pointer">Careers</div>
+            <Link href="/about" className="hover:text-white">
+              About
+            </Link>
+            <Link href="/contact" className="hover:text-white">
+              Contact
+            </Link>
           </div>
 
           {/* Social Icons */}
           <div className="flex space-x-4 text-2xl">
-            <FaYoutube className="hover:text-white cursor-pointer" />
-            <FaFacebookF className="hover:text-white cursor-pointer" />
-            <FaInstagram className="hover:text-white cursor-pointer" />
-            <FaTiktok className="hover:text-white cursor-pointer" />
+            <a
+              href="https://www.youtube.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-white"
+            >
+              <FaYoutube />
+            </a>
+            <a
+              href="https://www.facebook.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-white"
+            >
+              <FaFacebookF />
+            </a>
+            <a
+              href="https://www.instagram.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-white"
+            >
+              <FaInstagram />
+            </a>
+            <a
+              href="https://www.tiktok.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-white"
+            >
+              <FaTiktok />
+            </a>
           </div>
         </div>
       </div>
