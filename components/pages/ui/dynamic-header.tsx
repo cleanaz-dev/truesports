@@ -20,7 +20,7 @@ const DynamicHeader: React.FC<DynamicHeaderProps> = ({
   textColor = 'white'
 }) => {
   return (
-    <div className="relative w-full h-[55vh] sm:h-[92vh] flex items-center justify-center overflow-hidden" style={{ marginTop: 0, paddingTop: 0 }}>
+    <div className="relative w-full h-[60vh] sm:h-[92vh] flex items-center justify-center overflow-hidden" style={{ marginTop: 0, paddingTop: 0 }}>
       {/* Background Media */}
       {backgroundType === 'youtube' ? (
         <div className="absolute inset-0 w-full h-full overflow-hidden" style={{ top: 0, left: 0 }}>
@@ -75,7 +75,7 @@ const DynamicHeader: React.FC<DynamicHeaderProps> = ({
         {/* Statement Text - Large */}
         {statementText && (
           <h1 
-            className="text-4xl md:text-5xl font-extrabold mb-6 leading-tight"
+            className="text-4xl md:text-5xl font-extrabold mb-6 leading-7.5 md:leading-tight"
             style={{ color: textColor }}
           >
             {statementText}

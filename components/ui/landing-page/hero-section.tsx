@@ -1,6 +1,7 @@
 // components/HeroSection.tsx
 import React from "react";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function HeroSection() {
   return (
@@ -42,8 +43,13 @@ export default function HeroSection() {
             variant="default"
             size="lg"
             className="bg-blue-600 rounded-3xl w-full sm:w-auto px-10"
+            asChild
           >
+            <Link 
+              href="/about"
+            >
             ABOUT TRUE SPORTS
+            </Link>
           </Button>
           <Button
             variant="secondary"

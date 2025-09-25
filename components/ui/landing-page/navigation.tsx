@@ -22,6 +22,7 @@ const navItems = [
 
 export default function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -29,6 +30,10 @@ export default function Navigation() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const handleLinkClick = () => {
+    setIsSheetOpen(false);
+  };
 
   return (
     <nav
@@ -77,7 +82,7 @@ export default function Navigation() {
 
         {/* Mobile Sheet Menu */}
         <div className="md:hidden">
-          <Sheet>
+          <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
             <SheetTrigger asChild>
               <button className="w-6 h-5 flex flex-col justify-between cursor-pointer">
                 <span className="block h-[2px] w-full bg-blue-700 transition-transform duration-300"></span>
@@ -98,6 +103,7 @@ export default function Navigation() {
                   <Link
                     key={item.href}
                     href={item.href}
+                    onClick={handleLinkClick}
                     className={clsx(
                       "text-white text-2xl hover:text-gray-300 transition-colors relative pb-1",
                       isActive &&
