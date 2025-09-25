@@ -14,18 +14,26 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "True Sports",
-  description: "True Sports - Your gateway to unparalleled sports content, audience engagement, and brand growth.",
-  keywords: ["sports", "True Sports", "brand engagement", "sports content", "sports marketing"],
+  description:
+    "True Sports - Your gateway to unparalleled sports content, audience engagement, and brand growth.",
+  keywords: [
+    "sports",
+    "True Sports",
+    "brand engagement",
+    "sports content",
+    "sports marketing",
+  ],
   authors: [{ name: "True Sports" }],
   themeColor: "#1E40AF", // blue theme
   openGraph: {
     title: "True Sports",
-    description: "True Sports - Your gateway to unparalleled sports content, audience engagement, and brand growth.",
+    description:
+      "True Sports - Your gateway to unparalleled sports content, audience engagement, and brand growth.",
     url: "https://truesports.vercel.app",
     siteName: "True Sports",
     images: [
       {
-        url: "/meta-logo-1.png",
+        url: "/images/ts-brands/ts-logo-mini.png", // ✅ updated path
         width: 512,
         height: 512,
         alt: "True Sports Logo",
@@ -37,16 +45,18 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "True Sports",
-    description: "True Sports - Your gateway to unparalleled sports content, audience engagement, and brand growth.",
-    images: ["/meta-logo-1.png"],
+    description:
+      "True Sports - Your gateway to unparalleled sports content, audience engagement, and brand growth.",
+    images: ["/images/ts-brands/ts-logo-mini.png"], // ✅ updated path
     creator: "@TrueSports", // optional: Twitter handle
   },
   icons: {
-    icon: "/meta-logo-1.png",
-    shortcut: "/meta-logo-1.png",
-    apple: "/meta-logo-1.png",
+    icon: "/images/ts-brands/ts-logo-mini.png", // ✅ updated path
+    shortcut: "/images/ts-brands/ts-logo-mini.png", // ✅ updated path
+    apple: "/images/ts-brands/ts-logo-mini.png", // ✅ updated path
   },
 };
+
 
 export default function RootLayout({
   children,
