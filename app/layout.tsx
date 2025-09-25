@@ -29,13 +29,13 @@ export const metadata: Metadata = {
     title: "True Sports",
     description:
       "True Sports - Your gateway to unparalleled sports content, audience engagement, and brand growth.",
-    url: "https://truesports.vercel.app",
+    url: "https://truesportslive.com",
     siteName: "True Sports",
     images: [
       {
-        url: "/images/ts-brands/ts-logo-mini.png", // ✅ updated path
-        width: 512,
-        height: 512,
+        url: "/images/ts-brands/ts-logo-mini-2.png", // ✅ updated path
+        width: 128,
+        height: 128,
         alt: "True Sports Logo",
       },
     ],
@@ -47,13 +47,13 @@ export const metadata: Metadata = {
     title: "True Sports",
     description:
       "True Sports - Your gateway to unparalleled sports content, audience engagement, and brand growth.",
-    images: ["/images/ts-brands/ts-logo-mini.png"], // ✅ updated path
+    images: ["/images/ts-brands/ts-logo-mini-2.png"], // ✅ updated path
     creator: "@TrueSports", // optional: Twitter handle
   },
   icons: {
-    icon: "/images/ts-brands/ts-logo-mini.png", // ✅ updated path
-    shortcut: "/images/ts-brands/ts-logo-mini.png", // ✅ updated path
-    apple: "/images/ts-brands/ts-logo-mini.png", // ✅ updated path
+    icon: "/images/ts-brands/ts-logo-mini-2.png", // ✅ updated path
+    shortcut: "/images/ts-brands/ts-logo-mini-2.png", // ✅ updated path
+    apple: "/images/ts-brands/ts-logo-mini-2.png", // ✅ updated path
   },
 };
 
