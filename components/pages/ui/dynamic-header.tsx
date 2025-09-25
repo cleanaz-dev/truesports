@@ -65,7 +65,7 @@ const DynamicHeader: React.FC<DynamicHeaderProps> = ({
         {/* Topic Text - Small */}
         {topicText && (
           <p 
-            className="text-lg font-medium tracking-wider uppercase mb-2 opacity-80"
+            className="text-lg font-medium tracking-wider uppercase mb-2 "
             style={{ color: textColor }}
           >
             {topicText}
