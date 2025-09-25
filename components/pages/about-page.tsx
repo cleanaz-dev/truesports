@@ -1,5 +1,6 @@
 import React from "react";
 import DynamicHeader from "./ui/dynamic-header";
+import AboutTS from "./ui/about-ts";
 
 const features = [
   {
@@ -21,7 +22,7 @@ const features = [
 
 function SportsFeatures() {
   return (
-    <section className="w-full py-16 px-6 bg-slate-900">
+    <section className="w-full py-16 md:py-24 px-6 bg-slate-900">
       <div className="md:px-16 grid gap-12 md:grid-cols-3 ">
         {features.map((feature, i) => (
           <div key={i} className="space-y-4">
@@ -50,6 +51,7 @@ export default function AboutPage() {
         descriptionText="Discover how True Sports can revolutionize your brand's presence and impact in the sports industry. Partner with us for unparalleled success."
       />
       <SportsFeatures />
+      <AboutTS />
     </div>
   );
 }
