@@ -7,6 +7,12 @@ import { Button } from "@/components/ui/button"
 
 const navItems = ["Home", ...leagues, "Work With Us"]
 
+function hrefForItem(item: string): string {
+  if (item === "Home") return "/"
+  if (item === "Work With Us") return "/work-with-us"
+  return `/${item.toLowerCase()}`
+}
+
 export function SiteHeader() {
   const [open, setOpen] = useState(false)
 
@@ -35,7 +41,7 @@ export function SiteHeader() {
           {navItems.map((item, i) => (
             <a
               key={item}
-              href="#"
+              href={hrefForItem(item)}
               className={`rounded-md px-3 py-2 font-display text-sm font-medium uppercase tracking-wide transition-colors hover:bg-secondary ${
                 item === "Work With Us"
                   ? "text-blue-500 hover:text-blue-600"
@@ -61,7 +67,7 @@ export function SiteHeader() {
           {navItems.map((item) => (
             <a
               key={item}
-              href="#"
+              href={hrefForItem(item)}
               className={`block rounded-md px-3 py-2.5 font-display text-sm font-medium uppercase tracking-wide transition-colors hover:bg-secondary ${
                 item === "Work With Us"
                   ? "text-blue-500 hover:text-blue-600"

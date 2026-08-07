@@ -1,0 +1,116 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+
+enum League {
+  NBA
+  NFL
+  MLB
+  Soccer
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+model User {
+  id            String    @id
+  name          String
+  email         String
+  emailVerified Boolean
+  image         String?
+  role          UserRole @default(USER)
+  createdAt     DateTime
+  updatedAt     DateTime
+  sessions      Session[]
+  accounts      Account[]
+  articles      Article[]   // 👈 back-relation, so Prisma knows the other side
+
+  @@unique([email])
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime
+  updatedAt DateTime
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime
+  updatedAt             DateTime
+
+  @@map("account")
+}
+
+model Verification {
+  id         String    @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime?
+  updatedAt  DateTime?
+
+  @@map("verification")
+}
+
+model Article {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  league      League
+  title       String
+  excerpt     String
+  createdAt   DateTime @default(now())
+  readMinutes Int
+  image       String
+  featured    Boolean  @default(false)
+
+  authorId    String                                    // 👈 the actual FK column
+  author      User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@index([league])
+  @@index([slug])
+  @@index([authorId])   // good idea since you'll likely query "articles by author" too
+}
+
+model SocialPost {
+  id        String   @id @default(cuid())
+  handle    String
+  caption   String
+  image     String
+  likes     Int      // Store as a real number (e.g., 24100) so you can sort by most popular
+  createdAt DateTime @default(now())
+}
