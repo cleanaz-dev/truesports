@@ -1,75 +1,45 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+// import { Analytics } from '@vercel/analytics/next'
+import type { Metadata, Viewport } from 'next'
+import { Oswald, Inter, Geist } from 'next/font/google'
+import './globals.css'
+import { cn } from "@/lib/utils";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+const oswald = Oswald({
+  subsets: ['latin'],
+  variable: '--font-oswald',
+  weight: ['400', '500', '600', '700'],
+})
+
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+})
 
 export const metadata: Metadata = {
-  title: "True Sports",
+  title: 'True Sports — NBA, NFL, MLB & Soccer News, Scores & Highlights',
   description:
-    "True Sports - Your gateway to unparalleled sports content, audience engagement, and brand growth.",
-  keywords: [
-    "sports",
-    "True Sports",
-    "brand engagement",
-    "sports content",
-    "sports marketing",
-  ],
-  authors: [{ name: "True Sports" }],
-  themeColor: "#1E40AF", // blue theme
-  openGraph: {
-    title: "True Sports",
-    description:
-      "True Sports - Your gateway to unparalleled sports content, audience engagement, and brand growth.",
-    url: "https://truesportslive.com",
-    siteName: "True Sports",
-    images: [
-      {
-        url: "/images/ts-brands/ts-logo-mini-2.png", // ✅ updated path
-        width: 256,
-        height: 256,
-        alt: "True Sports Logo",
-      },
-    ],
-    locale: "en_US",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "True Sports",
-    description:
-      "True Sports - Your gateway to unparalleled sports content, audience engagement, and brand growth.",
-    images: ["/images/ts-brands/ts-logo-mini-2.png"], // ✅ updated path
-    creator: "@TrueSports", // optional: Twitter handle
-  },
-  icons: {
-    icon: "/images/ts-brands/ts-logo-mini.png", // ✅ updated path
-    shortcut: "/images/ts-brands/ts-logo-mini.png", // ✅ updated path
-    apple: "/images/ts-brands/ts-logo-mini.png", // ✅ updated path
-  },
-};
+    'Breaking sports news, live scores, and the hottest takes across the NBA, NFL, MLB, and world soccer. Your front-row seat to the game.',
+  generator: 'v0.app',
+}
 
+export const viewport: Viewport = {
+  colorScheme: 'dark',
+  themeColor: '#0c0d10',
+}
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+    <html lang="en" className={cn("dark", "bg-background", oswald.variable, inter.variable, "font-sans", geist.variable)}>
+      <body className="antialiased font-sans">
         {children}
+        {/* {process.env.NODE_ENV === 'production' && <Analytics />} */}
       </body>
     </html>
-  );
+  )
 }

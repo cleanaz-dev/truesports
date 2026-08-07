@@ -1,20 +1,27 @@
-// app/page.tsx (with proper spacing adjustment)
-import CloutSection from "@/components/ui/landing-page/clout-section";
-import FooterSection from "@/components/ui/landing-page/footer-section";
-import HeroSection from "@/components/ui/landing-page/hero-section";
-import MediaPartners from "@/components/ui/landing-page/media-partners";
-import Navigation from "@/components/ui/landing-page/navigation";
+import { ArticleFeed } from "@/components/site/article-feed";
+import { HeroFeature } from "@/components/site/hero-feature";
+import { Scoreboard } from "@/components/site/scoreboard";
+import { SocialFeed } from "@/components/site/site-feed";
+import { SiteFooter } from "@/components/site/site-footer";
+import { SiteHeader } from "@/components/site/site-header";
 
-export default function Home() {
+import { fetchAllScores } from "@/lib/sports-api"
+
+export const revalidate = 30
+
+export default async function HomePage() {
+  const initialGames = await fetchAllScores()
+
   return (
-    <div>
-      {" "}
-      {/* Add padding to prevent content from being hidden behind the nav */}
-      <Navigation />
-      <HeroSection />
-      <MediaPartners />
-      <CloutSection />
-      <FooterSection />
+    <div className="flex min-h-screen flex-col bg-background">
+      <SiteHeader />
+      <main className="flex-1">
+        <Scoreboard initialGames={initialGames} />
+        <HeroFeature />
+        <ArticleFeed />
+        <SocialFeed />
+      </main>
+      <SiteFooter />
     </div>
-  );
+  )
 }
