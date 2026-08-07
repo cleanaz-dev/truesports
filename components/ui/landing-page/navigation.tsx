@@ -83,7 +83,7 @@ export default function Navigation() {
         {/* Mobile Sheet Menu */}
         <div className="md:hidden">
           <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-            <SheetTrigger asChild>
+            <SheetTrigger >
               <button className="w-6 h-5 flex flex-col justify-between cursor-pointer">
                 <span className="block h-[2px] w-full bg-blue-700 transition-transform duration-300"></span>
                 <span className="block h-[2px] w-full bg-blue-700 transition-transform duration-300"></span>

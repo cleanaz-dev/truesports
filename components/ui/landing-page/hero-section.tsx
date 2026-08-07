@@ -43,7 +43,7 @@ export default function HeroSection() {
             variant="default"
             size="lg"
             className="bg-blue-600 rounded-3xl w-full sm:w-auto px-10"
-            asChild
+            
           >
             <Link href="/about">ABOUT TRUE SPORTS</Link>
           </Button>
@@ -51,7 +51,7 @@ export default function HeroSection() {
             variant="secondary"
             size="lg"
             className="bg-transparent border-2 text-white rounded-3xl w-full sm:w-auto px-10"
-            asChild
+          
           >
             <Link href="/advertisement">ADVERTISEMENT OPPORTUNITIES</Link>
           </Button>
