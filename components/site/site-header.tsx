@@ -55,7 +55,13 @@ export function SiteHeader() {
           ))}
         </nav>
 
-        <div className="ml-auto flex items-center gap-2">
+         <div className="ml-auto flex items-center gap-6">
+          <a
+            href="/merch"
+            className="hidden font-display text-sm font-medium uppercase tracking-wide text-muted-foreground transition-colors hover:text-amber-500 sm:inline-flex items-center duration-300"
+          >
+            Merch
+          </a>
           <Button className="hidden font-display font-semibold uppercase tracking-wide sm:inline-flex">
             Subscribe
           </Button>
