@@ -12,40 +12,40 @@ const merchItems = [
     id: "m-1",
     name: "The Pressbox Heavyweight Hoodie",
     price: "$85.00",
-    image: "/images/merch-1.png", // Replace with your actual image paths
+    image: "/merch/hoodie.jpg", // Replace with your actual image paths
     badge: "Best Seller",
   },
   {
     id: "m-2",
     name: "Courtside Vintage Wash Tee",
     price: "$45.00",
-    image: "/images/merch-2.png",
+    image: "/merch/vintage-wash-tee.jpg",
     badge: "New Drop",
   },
   {
     id: "m-3",
     name: "Gameday Snapback Hat",
     price: "$35.00",
-    image: "/images/merch-3.png",
+    image: "/merch/snapback-hat.jpg",
   },
   {
     id: "m-4",
     name: "Director's Bomber Jacket",
     price: "$120.00",
-    image: "/images/merch-4.png",
+    image: "/merch/bomber-jacket.jpg",
     badge: "Limited Edition",
   },
   {
     id: "m-5",
     name: "Essential Logo Socks (3-Pack)",
     price: "$25.00",
-    image: "/images/merch-5.png",
+    image: "/merch/socks.jpg",
   },
   {
     id: "m-6",
     name: "Off-Duty Premium Joggers",
     price: "$75.00",
-    image: "/images/merch-6.png",
+    image: "/merch/joggers.jpg",
     badge: "Almost Gone",
   },
 ]
