@@ -15,6 +15,7 @@ import {
 import Image from "next/image"
 
 const navItems = ["Home", ...leagues, "Work With Us"]
+const mobileNavItems = [...navItems, "Merch"]
 
 function hrefForItem(item: string): string {
   if (item === "Home") return "/"
@@ -39,6 +40,10 @@ export function SiteHeader() {
 
     if (item === "Work With Us") {
       return `${base} text-blue-500 hover:text-blue-600`
+    }
+
+    if (item === "Merch") {
+      return `${base} text-muted-foreground hover:text-amber-500 duration-300`
     }
 
     if (EXCLUDED_FROM_ACTIVE_STYLING.includes(item)) {
@@ -89,7 +94,7 @@ export function SiteHeader() {
               </a>
             </SheetHeader>
             <nav className="flex flex-col gap-1 px-4 pb-4 pt-2">
-              {navItems.map((item) => (
+              {mobileNavItems.map((item) => (
                 <a
                   key={item}
                   href={hrefForItem(item)}
