@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     siteName: 'True Sports',
     images: [
       {
-        url: '/images/ts-brands/ts-mini-logo-2.png',
+        url: '/images/ts-mini-logo-2.png',
         width: 1200,
         height: 630,
         alt: 'True Sports',
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     title: 'True Sports — NBA, NFL, MLB & Soccer News, Scores & Highlights',
     description:
       'Breaking sports news, live scores, and the hottest takes across the NBA, NFL, MLB, and world soccer. Your front-row seat to the game.',
-    images: ['/images/meta-logo-1.png'],
+    images: ['/images/ts-mini-logo-2.png'],
   },
 }
 
