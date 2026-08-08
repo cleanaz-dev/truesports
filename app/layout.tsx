@@ -19,7 +19,7 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://yourdomain.com'), // TODO: replace with your real production domain
+  metadataBase: new URL('https://trueportslive.com'), // TODO: replace with your real production domain
   title: 'True Sports — NBA, NFL, MLB & Soccer News, Scores & Highlights',
   description:
     'Breaking sports news, live scores, and the hottest takes across the NBA, NFL, MLB, and world soccer. Your front-row seat to the game.',
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     title: 'True Sports — NBA, NFL, MLB & Soccer News, Scores & Highlights',
     description:
       'Breaking sports news, live scores, and the hottest takes across the NBA, NFL, MLB, and world soccer. Your front-row seat to the game.',
-    url: 'https://yourdomain.com', // TODO: replace with your real production domain
+    url: 'https://trueportslive.com', // TODO: replace with your real production domain
     siteName: 'True Sports',
     images: [
       {
