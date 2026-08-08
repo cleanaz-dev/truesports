@@ -2,6 +2,8 @@
 
 import { Camera, Heart, MessageCircle } from "lucide-react"
 import { socialPosts } from "@/lib/data"
+import { FaSquareInstagram } from "react-icons/fa6"
+import { FaInstagram } from "react-icons/fa";
 
 export function SocialFeed() {
   return (
@@ -9,7 +11,7 @@ export function SocialFeed() {
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
         <div className="mb-5 flex items-center justify-between border-b border-border pb-3">
           <div className="flex items-center gap-2.5">
-            <Camera className="size-6 text-primary" />
+            <FaInstagram  className="size-6 text-primary" />
             <h2 className="font-display text-2xl font-bold uppercase tracking-tight text-foreground">
               On The Gram
             </h2>
@@ -18,7 +20,7 @@ export function SocialFeed() {
             href="#"
             className="font-display text-xs font-semibold uppercase tracking-wide text-muted-foreground transition-colors hover:text-foreground"
           >
-            @thepressbox
+            @truesportslive
           </a>
         </div>
 
