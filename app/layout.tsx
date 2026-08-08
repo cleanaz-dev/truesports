@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     siteName: 'True Sports',
     images: [
       {
-        url: '/images/meta-logo-1.png',
+        url: '/images/ts-brands/ts-mini-logo-2.png',
         width: 1200,
         height: 630,
         alt: 'True Sports',
