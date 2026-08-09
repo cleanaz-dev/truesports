@@ -103,15 +103,18 @@ export async function handleGeneratedArticles(task: SystemTask, rawData: unknown
 
   // 5. Format the articles for Prisma
   // (TypeScript now knows exact types for `article.title`, `article.league`, etc.)
-  const articlesToInsert = articles.map((article) => ({
+ const articlesToInsert = articles.map((article: any) => ({
     slug: generateSlug(article.title),
-    league: article.league,
+    league: article.league as League,
     title: article.title,
     excerpt: article.excerpt,
     content: article.content,
-    readMinutes: article.readMinutes,
-    image: `gradient:${article.league}`,
-    authorId: aiAuthor!.id,
+    readMinutes: article.readMinutes || 3,
+    image: `gradient:${article.league}`, 
+    authorId: aiAuthor.id,
+    
+    // 👇 ADD THIS LINE SO THE CRON CAN FIND IT LATER 👇
+    originalUrl: article.originalUrl, 
   }));
 
   // 6. Insert everything in one database transaction

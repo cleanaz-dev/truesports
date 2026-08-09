@@ -104,11 +104,12 @@ model Verification {
 }
 
 model Article {
-  id      String @id @default(cuid())
-  slug    String @unique
-  league  League
-  title   String
-  excerpt String
+  id          String  @id @default(cuid())
+  slug        String  @unique
+  league      League
+  title       String
+  excerpt     String
+  originalUrl String? @unique
 
   // 👉 ADD THIS: The actual AI-generated article body. 
   // @db.Text allows for long-form content beyond the standard varchar limit.
