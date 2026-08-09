@@ -10,6 +10,7 @@
     "postinstall": "prisma generate"
   },
   "dependencies": {
+    "@aws-sdk/client-lambda": "^3.1106.0",
     "@base-ui/react": "^1.7.0",
     "@better-auth/infra": "^0.3.7",
     "@prisma/adapter-neon": "^7.9.1",
@@ -30,7 +31,8 @@
     "react-icons": "^5.5.0",
     "shadcn": "^4.16.2",
     "swr": "^2.5.0",
-    "tailwind-merge": "^3.3.1"
+    "tailwind-merge": "^3.3.1",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

@@ -12,7 +12,6 @@ datasource db {
   provider = "postgresql"
 }
 
-
 enum League {
   NBA
   NFL
@@ -25,18 +24,35 @@ enum UserRole {
   ADMIN
 }
 
+enum SystemTaskType {
+  GENERATE_ARTICLES
+  PUBLISH_SOCIAL_POST
+}
+
+enum SystemTaskRole {
+  AI
+  USER
+}
+
+enum SystemTaskStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
 model User {
   id            String    @id
   name          String
   email         String
   emailVerified Boolean
   image         String?
-  role          UserRole @default(USER)
+  role          UserRole  @default(USER)
   createdAt     DateTime
   updatedAt     DateTime
   sessions      Session[]
   accounts      Account[]
-  articles      Article[]   // 👈 back-relation, so Prisma knows the other side
+  articles      Article[] // 👈 back-relation, so Prisma knows the other side
 
   @@unique([email])
   @@map("user")
@@ -88,22 +104,27 @@ model Verification {
 }
 
 model Article {
-  id          String   @id @default(cuid())
-  slug        String   @unique
-  league      League
-  title       String
-  excerpt     String
+  id      String @id @default(cuid())
+  slug    String @unique
+  league  League
+  title   String
+  excerpt String
+
+  // 👉 ADD THIS: The actual AI-generated article body. 
+  // @db.Text allows for long-form content beyond the standard varchar limit.
+  content String @db.Text
+
   createdAt   DateTime @default(now())
   readMinutes Int
   image       String
   featured    Boolean  @default(false)
 
-  authorId    String                                    // 👈 the actual FK column
-  author      User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId String
+  author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
 
   @@index([league])
   @@index([slug])
-  @@index([authorId])   // good idea since you'll likely query "articles by author" too
+  @@index([authorId])
 }
 
 model SocialPost {
@@ -111,6 +132,18 @@ model SocialPost {
   handle    String
   caption   String
   image     String
-  likes     Int      // Store as a real number (e.g., 24100) so you can sort by most popular
+  likes     Int // Store as a real number (e.g., 24100) so you can sort by most popular
   createdAt DateTime @default(now())
+}
+
+model SystemTask {
+  id        String           @id @default(uuid())
+  status    SystemTaskStatus
+  type      SystemTaskType
+  lockKey   String?
+  initiator SystemTaskRole
+  metadata  Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
