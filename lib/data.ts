@@ -1,5 +1,5 @@
-export type League = "NBA" | "NFL" | "MLB" | "Soccer"
-export const leagues: League[] = ["NBA", "NFL", "MLB", "Soccer"]
+export type League = "NBA" | "NFL" | "MLB" | "NHL" | "Soccer"
+export const leagues: League[] = ["NBA", "NFL", "MLB", "NHL", "Soccer"]
 export type GameStatus = "live" | "final" | "upcoming"
 export type Team = {
   id?: string
@@ -160,6 +160,8 @@ export function leagueAccent(league: League): string {
       return "text-nfl"
     case "MLB":
       return "text-mlb"
+    case "NHL":
+      return "text-nhl"
     case "Soccer":
       return "text-soccer"
   }

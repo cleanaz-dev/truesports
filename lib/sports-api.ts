@@ -1,23 +1,22 @@
 // lib/sports-api.ts
 import type { Game, GameStatus, League, Team } from "@/lib/data"
 
-const ESPN_ENDPOINTS: Record<League, string> = {
-  NBA: "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard",
-  NFL: "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard",
-  MLB: "https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard",
-  Soccer: "https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard",
-}
-
-
-// Add this helper to map your leagues to ESPN's URL structure for the summary endpoint
-const ESPN_SPORT_PATHS: Record<string, string> = {
+// Single source of truth: league -> ESPN sport/league path
+const ESPN_SPORT_PATHS: Record<League, string> = {
   NBA: "basketball/nba",
   NFL: "football/nfl",
   MLB: "baseball/mlb",
-  Soccer: "soccer/eng.1",
-};
+  Soccer: "soccer/uefa.champions", 
+  NHL: "hockey/nhl",
+}
 
-
+// Derived from ESPN_SPORT_PATHS so the two maps can't drift out of sync
+const ESPN_ENDPOINTS: Record<League, string> = Object.fromEntries(
+  Object.entries(ESPN_SPORT_PATHS).map(([league, path]) => [
+    league,
+    `https://site.api.espn.com/apis/site/v2/sports/${path}/scoreboard`,
+  ])
+) as Record<League, string>
 
 // Expanded types to match the richer data we are pulling
 type EspnCompetitor = {
@@ -46,8 +45,6 @@ type EspnEvent = {
   }[]
   links?: { href: string }[]
 }
-
-
 
 function mapStatus(state: EspnEvent["status"]["type"]["state"]): GameStatus {
   if (state === "in") return "live"
@@ -99,14 +96,12 @@ function sortGames(games: Game[]): Game[] {
   })
 }
 
-
-
 async function fetchLeagueScores(league: League, dateStr?: string): Promise<Game[]> {
   try {
     let url = ESPN_ENDPOINTS[league];
     if (dateStr) {
       // Append the date query parameter based on the docs!
-      url += `?dates=${dateStr}`; 
+      url += `?dates=${dateStr}`;
     }
     const res = await fetch(url, { next: { revalidate: 30 } });
     if (!res.ok) return [];
@@ -118,7 +113,7 @@ async function fetchLeagueScores(league: League, dateStr?: string): Promise<Game
 }
 
 export async function fetchAllScores(dateStr?: string): Promise<Game[]> {
-  const leagues: League[] = ["NBA", "NFL", "MLB", "Soccer"];
+  const leagues: League[] = ["NBA", "NFL", "MLB", "Soccer", "NHL"];
   const results = await Promise.all(leagues.map(l => fetchLeagueScores(l, dateStr)));
   return sortGames(results.flat());
 }
@@ -130,11 +125,11 @@ export async function fetchGameStats(league: League, gameId: string) {
   try {
     const res = await fetch(url, { next: { revalidate: 30 } });
     if (!res.ok) return null;
-    
-    // The summary endpoint returns a MASSIVE object. 
+
+    // The summary endpoint returns a MASSIVE object.
     // It includes boxscore, plays, drives, win probabilities, etc.
     const data = await res.json();
-    
+
     return {
       header: data.header,       // Basic game info, score, status
       boxscore: data.boxscore,   // Player stats, team stats
@@ -149,9 +144,9 @@ export async function fetchGameStats(league: League, gameId: string) {
 
 export async function fetchLeagueNews(league: string) {
   // Ensure the league matches our keys (e.g., "NBA" not "nba")
-  const upperLeague = league.toUpperCase();
+  const upperLeague = league.toUpperCase() as League;
   const path = ESPN_SPORT_PATHS[upperLeague];
-  
+
   if (!path) return [];
 
   const url = `https://site.api.espn.com/apis/site/v2/sports/${path}/news`;
@@ -159,9 +154,9 @@ export async function fetchLeagueNews(league: string) {
   try {
     const res = await fetch(url, { next: { revalidate: 3600 } }); // Cache for 1 hour
     if (!res.ok) return [];
-    
+
     const data = await res.json();
-    
+
     // Map ESPN's structure to match your standard 'Article' format
     return data.articles.map((article: any) => ({
       id: String(article.id || article.dataSourceIdentifier),
@@ -172,15 +167,16 @@ export async function fetchLeagueNews(league: string) {
       league: upperLeague,
       author: article.byline || "True Sports Staff",
       date: article.published,
-      // Optional: Pass the real ESPN link if you want them to click through, 
+      // Optional: Pass the real ESPN link if you want them to click through,
       // or keep it internal to your site
-      link: article.links?.web?.href, 
+      link: article.links?.web?.href,
     }));
   } catch (error) {
     console.error(`Failed to fetch ${league} news:`, error);
     return []; // Return empty array on failure so we can trigger the static fallback
   }
 }
+
 export async function fetchLeagueStandings(league: League) {
   const path = ESPN_SPORT_PATHS[league];
   // Note: Soccer requires a specific league code in the path like eng.1
@@ -194,5 +190,3 @@ export async function fetchLeagueStandings(league: League) {
     return [];
   }
 }
-
-;
