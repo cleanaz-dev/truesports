@@ -145,6 +145,7 @@ model SystemTask {
   initiator SystemTaskRole
   metadata  Json?
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  completedAt DateTime?
 }
