@@ -1,5 +1,5 @@
-export type League = "NBA" | "NFL" | "MLB" | "NHL" | "Soccer"
-export const leagues: League[] = ["NBA", "NFL", "MLB", "NHL", "Soccer"]
+export type League = "NBA" | "NFL" | "MLB" | "NHL" | "SOCCER"
+export const leagues: League[] = ["NBA", "NFL", "MLB", "NHL", "SOCCER"]
 export type GameStatus = "live" | "final" | "upcoming"
 export type Team = {
   id?: string
@@ -85,7 +85,7 @@ export const articles: Article[] = [
   {
     id: "a-3",
     slug: "title-race-europe",
-    league: "Soccer",
+    league: "SOCCER",
     title: "A Two-Horse Race No More: The Title Picture Blows Wide Open",
     excerpt: "A dramatic weekend reshuffled the table and put a new contender in the mix.",
     author: "Priya Nair",
@@ -107,7 +107,7 @@ export const articles: Article[] = [
   {
     id: "a-5",
     slug: "derby-day-drama",
-    league: "Soccer",
+    league: "SOCCER",
     title: "Derby Day Delivers: Late Winner Sparks Chaos and a Manager on the Brink",
     excerpt: "Ninety minutes of tension boiled over in stoppage time. Nobody saw it coming.",
     author: "Priya Nair",
@@ -162,7 +162,7 @@ export function leagueAccent(league: League): string {
       return "text-mlb"
     case "NHL":
       return "text-nhl"
-    case "Soccer":
+    case "SOCCER":
       return "text-soccer"
   }
 }

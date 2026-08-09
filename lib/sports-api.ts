@@ -6,7 +6,7 @@ const ESPN_SPORT_PATHS: Record<League, string> = {
   NBA: "basketball/nba",
   NFL: "football/nfl",
   MLB: "baseball/mlb",
-  Soccer: "soccer/uefa.champions", 
+  SOCCER: "soccer/eng.1",
   NHL: "hockey/nhl",
 }
 
@@ -113,7 +113,7 @@ async function fetchLeagueScores(league: League, dateStr?: string): Promise<Game
 }
 
 export async function fetchAllScores(dateStr?: string): Promise<Game[]> {
-  const leagues: League[] = ["NBA", "NFL", "MLB", "Soccer", "NHL"];
+  const leagues: League[] = ["NBA", "NFL", "MLB", "SOCCER", "NHL"];
   const results = await Promise.all(leagues.map(l => fetchLeagueScores(l, dateStr)));
   return sortGames(results.flat());
 }
