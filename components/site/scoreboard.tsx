@@ -5,6 +5,7 @@ import useSWR from "swr"
 import { motion, AnimatePresence } from "framer-motion"
 import { leagues, type Game, type League } from "@/lib/data"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
+import Link from "next/link";
 
 const tabs: (League | "All")[] = ["All", ...leagues]
 
@@ -63,16 +64,14 @@ function TeamRow({ team, winner, upcoming }: { team: Game["home"]; winner: boole
 }
 
 function GameCard({ game }: { game: Game }) {
-  const upcoming = game.status === "upcoming"
-  const homeWins = !upcoming && (game.home.score ?? 0) > (game.away.score ?? 0)
-  const awayWins = !upcoming && (game.away.score ?? 0) > (game.home.score ?? 0)
+  const upcoming = game.status === "upcoming";
+  const homeWins = !upcoming && (game.home.score ?? 0) > (game.away.score ?? 0);
+  const awayWins = !upcoming && (game.away.score ?? 0) > (game.home.score ?? 0);
 
   return (
-    // framer-motion layout prop automatically animates the cards into position when filtered
-      <a
-      href={game.link ?? "#"}
-      target="_blank"
-      rel="noreferrer"
+
+    <Link
+      href={`/${game.league.toLowerCase()}/game/${game.id}`}
       className="flex w-52 shrink-0 flex-col gap-2.5 rounded-lg border border-border bg-card p-3 shadow-sm transition-all hover:border-primary/50 hover:shadow-md"
     >
       <div className="flex items-center justify-between">
@@ -81,20 +80,19 @@ function GameCard({ game }: { game: Game }) {
         </span>
         <StatusBadge game={game} />
       </div>
-      
+
       <div className="flex flex-col gap-1.5">
         <TeamRow team={game.away} winner={awayWins} upcoming={upcoming} />
         <TeamRow team={game.home} winner={homeWins} upcoming={upcoming} />
       </div>
-      
-      {/* Show series summary if it exists (e.g. Playoffs) */}
+
       {game.seriesSummary && (
         <div className="mt-1 border-t border-border pt-1.5 text-center text-[10px] text-muted-foreground uppercase tracking-wide">
           {game.seriesSummary}
         </div>
       )}
-    </a>
-  )
+    </Link>
+  );
 }
 
 // Skeleton loaders to show while fetching
