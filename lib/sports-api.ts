@@ -10,12 +10,14 @@ const ESPN_ENDPOINTS: Record<League, string> = {
 
 
 // Add this helper to map your leagues to ESPN's URL structure for the summary endpoint
-const ESPN_SPORT_PATHS: Record<League, string> = {
+const ESPN_SPORT_PATHS: Record<string, string> = {
   NBA: "basketball/nba",
   NFL: "football/nfl",
   MLB: "baseball/mlb",
   Soccer: "soccer/eng.1",
 };
+
+
 
 // Expanded types to match the richer data we are pulling
 type EspnCompetitor = {
@@ -44,6 +46,8 @@ type EspnEvent = {
   }[]
   links?: { href: string }[]
 }
+
+
 
 function mapStatus(state: EspnEvent["status"]["type"]["state"]): GameStatus {
   if (state === "in") return "live"
@@ -95,21 +99,28 @@ function sortGames(games: Game[]): Game[] {
   })
 }
 
-async function fetchLeagueScores(league: League): Promise<Game[]> {
+
+
+async function fetchLeagueScores(league: League, dateStr?: string): Promise<Game[]> {
   try {
-    const res = await fetch(ESPN_ENDPOINTS[league], { next: { revalidate: 30 } })
-    if (!res.ok) return []
-    const data: { events: EspnEvent[] } = await res.json()
-    return data.events.map((event) => normalizeEvent(event, league))
+    let url = ESPN_ENDPOINTS[league];
+    if (dateStr) {
+      // Append the date query parameter based on the docs!
+      url += `?dates=${dateStr}`; 
+    }
+    const res = await fetch(url, { next: { revalidate: 30 } });
+    if (!res.ok) return [];
+    const data: { events: EspnEvent[] } = await res.json();
+    return data.events.map((event) => normalizeEvent(event, league));
   } catch (error) {
-    return []
+    return [];
   }
 }
 
-export async function fetchAllScores(): Promise<Game[]> {
-  const leagues: League[] = ["NBA", "NFL", "MLB", "Soccer"]
-  const results = await Promise.all(leagues.map(fetchLeagueScores))
-  return sortGames(results.flat())
+export async function fetchAllScores(dateStr?: string): Promise<Game[]> {
+  const leagues: League[] = ["NBA", "NFL", "MLB", "Soccer"];
+  const results = await Promise.all(leagues.map(l => fetchLeagueScores(l, dateStr)));
+  return sortGames(results.flat());
 }
 
 export async function fetchGameStats(league: League, gameId: string) {
@@ -135,3 +146,53 @@ export async function fetchGameStats(league: League, gameId: string) {
     return null;
   }
 }
+
+export async function fetchLeagueNews(league: string) {
+  // Ensure the league matches our keys (e.g., "NBA" not "nba")
+  const upperLeague = league.toUpperCase();
+  const path = ESPN_SPORT_PATHS[upperLeague];
+  
+  if (!path) return [];
+
+  const url = `https://site.api.espn.com/apis/site/v2/sports/${path}/news`;
+
+  try {
+    const res = await fetch(url, { next: { revalidate: 3600 } }); // Cache for 1 hour
+    if (!res.ok) return [];
+    
+    const data = await res.json();
+    
+    // Map ESPN's structure to match your standard 'Article' format
+    return data.articles.map((article: any) => ({
+      id: String(article.id || article.dataSourceIdentifier),
+      title: article.headline,
+      excerpt: article.description,
+      // Fallback to a placeholder if ESPN doesn't provide an image
+      imageUrl: article.images?.[0]?.url || "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?q=80&w=2805&auto=format&fit=crop",
+      league: upperLeague,
+      author: article.byline || "True Sports Staff",
+      date: article.published,
+      // Optional: Pass the real ESPN link if you want them to click through, 
+      // or keep it internal to your site
+      link: article.links?.web?.href, 
+    }));
+  } catch (error) {
+    console.error(`Failed to fetch ${league} news:`, error);
+    return []; // Return empty array on failure so we can trigger the static fallback
+  }
+}
+export async function fetchLeagueStandings(league: League) {
+  const path = ESPN_SPORT_PATHS[league];
+  // Note: Soccer requires a specific league code in the path like eng.1
+  const url = `https://site.api.espn.com/apis/site/v2/sports/${path}/standings`;
+
+  try {
+    const res = await fetch(url, { next: { revalidate: 3600 } });
+    const data = await res.json();
+    return data.children || []; // Returns conferences/divisions
+  } catch (e) {
+    return [];
+  }
+}
+
+;
