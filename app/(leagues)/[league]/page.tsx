@@ -46,7 +46,7 @@ export default async function LeaguePage({ params }: Params) {
 
   // 3. FETCH LIVE NEWS FROM ESPN
   const liveNews = await fetchLeagueNews(currentLeague);
-  
+
   // 4. DATA MERGING & FALLBACK LOGIC
   // If the API fails or returns empty, we fall back to your static articles
   let displayArticles = liveNews.length > 0 ? liveNews : articles.filter((a) => a.league === currentLeague);

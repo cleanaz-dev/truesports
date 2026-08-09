@@ -163,7 +163,7 @@ export async function fetchLeagueNews(league: string) {
       title: article.headline,
       excerpt: article.description,
       // Fallback to a placeholder if ESPN doesn't provide an image
-      imageUrl: article.images?.[0]?.url || "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?q=80&w=2805&auto=format&fit=crop",
+      image: article.images?.[0]?.url || "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?q=80&w=2805&auto=format&fit=crop",
       league: upperLeague,
       author: article.byline || "True Sports Staff",
       date: article.published,
