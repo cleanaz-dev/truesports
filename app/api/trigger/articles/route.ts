@@ -10,8 +10,15 @@ export async function GET(request: NextRequest) {
         const apiKey = process.env.AI_NEWS_API_KEY;
         const headerStore = await headers();
         const authHeader = headerStore.get("x-api-key");
-        
+
+        // 👇 TEMP DEBUG
+        console.log("Incoming request URL:", request.url);
+        console.log("x-api-key received:", authHeader ? `"${authHeader}"` : "MISSING");
+        console.log("Expected AI_NEWS_API_KEY set:", apiKey ? `yes (len ${apiKey.length})` : "MISSING/undefined");
+        console.log("All headers:", Object.fromEntries(headerStore.entries()));
+
         if (!authHeader || authHeader !== apiKey) {
+            console.log("Auth failed — mismatch or missing header");
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
