@@ -190,3 +190,21 @@ export async function fetchLeagueStandings(league: League) {
     return [];
   }
 }
+
+export async function fetchAllNews() {
+  const leagues: League[] = ["NBA", "NFL", "MLB", "SOCCER", "NHL"];
+  
+  // Fetch news for all leagues in parallel
+  const results = await Promise.all(leagues.map(l => fetchLeagueNews(l)));
+  
+  // Flatten the array of arrays into a single array
+  const allArticles = results.flat();
+
+  // Sort by published date (newest first)
+  const sortedArticles = allArticles.sort((a, b) => {
+    return new Date(b.date).getTime() - new Date(a.date).getTime();
+  });
+
+  // Return the top 9 latest articles (fits perfectly in a 3-column grid)
+  return sortedArticles.slice(0, 9);
+}
