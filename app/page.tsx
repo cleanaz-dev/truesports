@@ -10,8 +10,7 @@ import { fetchAllScores, fetchAllNews } from "@/lib/sports-api"
 export const revalidate = 30
 
 export default async function HomePage() {
-  // Fetch games and news in parallel to keep page load fast
-  const [initialGames, articles] = await Promise.all([
+  const [initialGames, allArticles] = await Promise.all([
     fetchAllScores(),
     fetchAllNews()
   ])
@@ -21,9 +20,13 @@ export default async function HomePage() {
       <SiteHeader />
       <main className="flex-1">
         <Scoreboard initialGames={initialGames} />
-        <HeroFeature />
-        {/* Pass the fetched articles to the feed */}
-        <ArticleFeed articles={articles} />
+        
+        {/* Pass all articles to the Hero */}
+        <HeroFeature articles={allArticles} />
+        
+        {/* Pass the leftovers (skipping the first 4) to the Feed */}
+        <ArticleFeed articles={allArticles.slice(4)} />
+        
         <SocialFeed />
       </main>
       <SiteFooter />
