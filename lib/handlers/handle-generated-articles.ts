@@ -38,7 +38,7 @@ export async function handleGeneratedArticles(task: SystemTask, rawData: unknown
 
   if (!parsed.success) {
     // If Zod validation fails, log it and mark the task as FAILED
-    console.error("Zod Validation Failed:", parsed.error.format());
+    console.error("Zod Validation Failed:", z.flattenError(parsed.error));
     await prisma.systemTask.update({
       where: { id: task.id },
       data: {
@@ -46,7 +46,7 @@ export async function handleGeneratedArticles(task: SystemTask, rawData: unknown
         metadata: {
           ...(task.metadata as object || {}),
           error: "Invalid webhook payload structure",
-          validationErrors: parsed.error.flatten(),
+          validationErrors: z.flattenError(parsed.error),
         },
       },
     });

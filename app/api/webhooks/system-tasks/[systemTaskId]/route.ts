@@ -4,6 +4,7 @@ import { SystemTaskType } from "@/lib/generated/prisma/client"; // Adjust path i
 import { prisma } from "@/lib/prisma";
 import { headers } from "next/headers";
 import { handleGeneratedArticles } from "@/lib/handlers/handle-generated-articles";
+import { handlerGeneratedStory } from "@/lib/handlers/handle-generated-story";
 
 
 interface Params {
@@ -39,6 +40,10 @@ export async function POST(request: Request, { params }: Params) {
       case SystemTaskType.GENERATE_ARTICLES: 
         await handleGeneratedArticles(task, data);
         break;
+
+      case SystemTaskType.STORY_GENERATOR:
+        await handlerGeneratedStory(task,data)
+        break
 
       default:
         return NextResponse.json({ error: "Unknown system task type" }, { status: 400 });
