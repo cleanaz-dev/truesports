@@ -1,3 +1,5 @@
+//lib/data.ts
+
 export type League = "NBA" | "NFL" | "MLB" | "NHL" | "SOCCER"
 export const leagues: League[] = ["NBA", "NFL", "MLB", "NHL", "SOCCER"]
 export type GameStatus = "live" | "final" | "upcoming"

@@ -16,7 +16,8 @@ enum League {
   NBA
   NFL
   MLB
-  Soccer
+  SOCCER
+  NHL
 }
 
 enum UserRole {
