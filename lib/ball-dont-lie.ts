@@ -1,5 +1,6 @@
 // lib/spotlight/select.ts
 
+import { createScheduleCommand, scheduler } from "./aws/scheduler";
 import { prisma } from "./prisma";
 
 const BDL_BASE = 'https://api.balldontlie.io/v1';
@@ -160,18 +161,84 @@ function computePhaseWindows(gameStartTime: Date) {
   ] as const;
 }
 
-export async function enqueueStoryGeneratorTasks(spotlight: { id: string; league: string }, gameStartTime: Date) {
+export async function enqueueStoryGeneratorTasks(spotlight: any, gameStartTime: Date) {
   const windows = computePhaseWindows(gameStartTime);
+  
+  // 1. Create the stories in the database
+  const stories = await Promise.all(
+    windows.map(async (w) => {
+      return await prisma.sportStory.create({
+        data: {
+          spotlightId: spotlight.id,
+          league: spotlight.league,
+          phase: w.phase,
+          audience: 'stats',
+          tone: 'editorial',
+          status: 'pending',
+          scheduledFor: w.scheduledFor,
+        },
+      });
+    })
+  );
 
-  await prisma.sportStory.createMany({
-    data: windows.map((w) => ({
-      spotlightId: spotlight.id,
-      league: spotlight.league,
-      phase: w.phase,
-      audience: 'stats',
-      tone: 'editorial',
-      status: 'pending',
-      scheduledFor: w.scheduledFor,
-    })),
-  });
+  // 2. Schedule the exact Lambda triggers in AWS EventBridge
+  for (const story of stories) {
+    // Create the SystemTask now so we have the ID for the webhook
+    const task = await prisma.systemTask.create({
+      data: {
+        type: "STORY_GENERATOR",
+        status: "PENDING",
+        initiator: "AI",
+        metadata: {
+          storyId: story.id,
+          gameId: spotlight.bdlGameId,
+          phase: story.phase,
+        },
+      },
+    });
+
+    // Update the story with the taskId
+    await prisma.sportStory.update({
+      where: { id: story.id },
+      data: { taskId: task.id }
+    });
+
+    // Format the time for EventBridge (must be: YYYY-MM-DDTHH:mm:ss)
+    const exactTime = story.scheduledFor.toISOString().split(".")[0];
+
+    const lambdaPayload = {
+      storyId: story.id,
+      taskId: task.id,
+      gameId: spotlight.bdlGameId,
+      homeTeam: spotlight.homeTeam,
+      awayTeam: spotlight.awayTeam,
+      phase: story.phase,
+      audience: story.audience,
+      tone: story.tone,
+      webhookUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/webhooks/system-task/${task.id}`,
+    };
+
+    // 3. Command AWS to run the Lambda at the EXACT minute
+    const command = createScheduleCommand({
+      name: `TrueSports-StoryGen-${task.id}`, // Must be unique
+      scheduleExpression: `at(${exactTime})`, // e.g. at(2023-11-20T19:00:00)
+      flexibleTimeWindow: { Mode: "OFF" },    // OFF = exact precision
+      actionAfterCompletion: "DELETE",        // Cleans up the schedule after it runs
+      target: {
+        Arn: process.env.LAMBDA_FUNCTION_ARN!, // The ARN of your Python Lambda
+        RoleArn: process.env.EVENTBRIDGE_ROLE_ARN!, // IAM Role allowing EventBridge to invoke Lambda
+        Input: JSON.stringify(lambdaPayload),
+      },
+    });
+
+    await scheduler.send(command)
+    
+    // We increment budget here instead of the old dispatch cron
+    await prisma.dailySpotlight.update({
+        where: { id: spotlight.id },
+        data: { requestsUsed: { increment: 1 } }
+    });
+    
+    console.log(`Scheduled story ${story.id} for EXACTLY ${exactTime}`);
+  }
 }

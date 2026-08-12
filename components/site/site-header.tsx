@@ -13,6 +13,8 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 import Image from "next/image"
+import { SpotlightSheet } from "../spotlight/spotlight-sheet"
+import { getSpotlight } from "@/lib/actions/get-spotlight"
 
 const navItems = ["Home", ...leagues, "Work With Us"]
 const mobileNavItems = [...navItems, "Merch"]
@@ -27,8 +29,13 @@ function hrefForItem(item: string): string {
 // "active route" white/foreground treatment.
 const EXCLUDED_FROM_ACTIVE_STYLING = ["Merch", "Work With Us"]
 
-export function SiteHeader() {
+type SiteHeaderProps = {
+  spotlight: Awaited<ReturnType<typeof getSpotlight>>
+}
+
+export function SiteHeader({ spotlight }: SiteHeaderProps) {
   const [open, setOpen] = useState(false)
+  const [openSpotlight, setOpenSpotlight] = useState(false)
   const pathname = usePathname()
 
   function navLinkClasses(item: string, variant: "desktop" | "mobile") {
@@ -134,6 +141,14 @@ export function SiteHeader() {
         </nav>
 
         <div className="ml-auto flex items-center gap-6">
+          {spotlight && (
+            <Button
+              className="hidden font-display font-semibold uppercase tracking-wide sm:inline-flex"
+              onClick={() => setOpenSpotlight(true)}
+            >
+              🔥 Game Spotlight
+            </Button>
+          )}
           <a
             href="/merch"
             className="hidden font-display text-sm font-medium uppercase tracking-wide text-muted-foreground transition-colors hover:text-amber-500 sm:inline-flex items-center duration-300"
@@ -145,6 +160,12 @@ export function SiteHeader() {
           </Button>
         </div>
       </div>
+
+      <SpotlightSheet
+        data={spotlight}
+        open={openSpotlight}
+        onOpenChange={setOpenSpotlight}
+      />
     </header>
   )
 }
