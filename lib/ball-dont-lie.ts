@@ -215,7 +215,7 @@ export async function enqueueStoryGeneratorTasks(spotlight: any, gameStartTime: 
       phase: story.phase,
       audience: story.audience,
       tone: story.tone,
-      webhookUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/webhooks/system-task/${task.id}`,
+      webhookUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/webhooks/system-tasks/${task.id}`,
     };
 
     // 3. Command AWS to run the Lambda at the EXACT minute
