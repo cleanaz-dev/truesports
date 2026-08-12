@@ -162,8 +162,11 @@ function computePhaseWindows(gameStartTime: Date) {
 }
 
 export async function enqueueStoryGeneratorTasks(spotlight: any, gameStartTime: Date) {
+  console.log(`[enqueueStoryGeneratorTasks] Starting for spotlight ${spotlight.id}, gameStartTime=${gameStartTime.toISOString()}`);
+
   const windows = computePhaseWindows(gameStartTime);
-  
+  console.log(`[enqueueStoryGeneratorTasks] Computed ${windows.length} phase windows:`, windows.map(w => `${w.phase}@${w.scheduledFor.toISOString()}`));
+
   // 1. Create the stories in the database
   const stories = await Promise.all(
     windows.map(async (w) => {
@@ -180,9 +183,12 @@ export async function enqueueStoryGeneratorTasks(spotlight: any, gameStartTime: 
       });
     })
   );
+  console.log(`[enqueueStoryGeneratorTasks] Created ${stories.length} SportStory rows:`, stories.map(s => s.id));
 
   // 2. Schedule the exact Lambda triggers in AWS EventBridge
   for (const story of stories) {
+    console.log(`[enqueueStoryGeneratorTasks] Processing story ${story.id} (phase=${story.phase}, scheduledFor=${story.scheduledFor.toISOString()})`);
+
     // Create the SystemTask now so we have the ID for the webhook
     const task = await prisma.systemTask.create({
       data: {
@@ -196,6 +202,7 @@ export async function enqueueStoryGeneratorTasks(spotlight: any, gameStartTime: 
         },
       },
     });
+    console.log(`[enqueueStoryGeneratorTasks] Created SystemTask ${task.id} for story ${story.id}`);
 
     // Update the story with the taskId
     await prisma.sportStory.update({
@@ -206,6 +213,19 @@ export async function enqueueStoryGeneratorTasks(spotlight: any, gameStartTime: 
     // Format the time for EventBridge (must be: YYYY-MM-DDTHH:mm:ss)
     const exactTime = story.scheduledFor.toISOString().split(".")[0];
 
+    // Guard against scheduling in the past — AWS Scheduler will reject/silently skip these
+    if (story.scheduledFor.getTime() <= Date.now()) {
+      console.error(`[enqueueStoryGeneratorTasks] SKIPPING story ${story.id} — scheduledFor ${exactTime} is already in the past (now=${new Date().toISOString()})`);
+      await prisma.sportStory.update({
+        where: { id: story.id },
+        data: { status: "failed", errorMessage: "scheduledFor was in the past at enqueue time" }
+      });
+      continue;
+    }
+
+    const webhookUrl = `${process.env.NEXT_PUBLIC_APP_URL}/api/webhooks/system-tasks/${task.id}`;
+    console.log(`[enqueueStoryGeneratorTasks] webhookUrl for task ${task.id}: ${webhookUrl}`);
+
     const lambdaPayload = {
       storyId: story.id,
       taskId: task.id,
@@ -215,30 +235,48 @@ export async function enqueueStoryGeneratorTasks(spotlight: any, gameStartTime: 
       phase: story.phase,
       audience: story.audience,
       tone: story.tone,
-      webhookUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/webhooks/system-tasks/${task.id}`,
+      webhookUrl,
     };
+    console.log(`[enqueueStoryGeneratorTasks] Lambda payload for task ${task.id}:`, lambdaPayload);
+
+    const scheduleName = `TrueSports-StoryGen-${task.id}`;
 
     // 3. Command AWS to run the Lambda at the EXACT minute
     const command = createScheduleCommand({
-      name: `TrueSports-StoryGen-${task.id}`, // Must be unique
-      scheduleExpression: `at(${exactTime})`, // e.g. at(2023-11-20T19:00:00)
-      flexibleTimeWindow: { Mode: "OFF" },    // OFF = exact precision
-      actionAfterCompletion: "DELETE",        // Cleans up the schedule after it runs
+      name: scheduleName,
+      scheduleExpression: `at(${exactTime})`,
+      flexibleTimeWindow: { Mode: "OFF" },
+      actionAfterCompletion: "DELETE",
       target: {
-        Arn: process.env.LAMBDA_FUNCTION_ARN!, // The ARN of your Python Lambda
-        RoleArn: process.env.EVENTBRIDGE_ROLE_ARN!, // IAM Role allowing EventBridge to invoke Lambda
+        Arn: process.env.LAMBDA_FUNCTION_ARN!,
+        RoleArn: process.env.EVENTBRIDGE_ROLE_ARN!,
         Input: JSON.stringify(lambdaPayload),
       },
     });
 
-    await scheduler.send(command)
-    
+    console.log(`[enqueueStoryGeneratorTasks] Sending CreateSchedule "${scheduleName}" at(${exactTime})`);
+    console.log(`[enqueueStoryGeneratorTasks] LAMBDA_FUNCTION_ARN=${process.env.LAMBDA_FUNCTION_ARN}, EVENTBRIDGE_ROLE_ARN=${process.env.EVENTBRIDGE_ROLE_ARN}`);
+
+    try {
+      const result = await scheduler.send(command);
+      console.log(`[enqueueStoryGeneratorTasks] Schedule created OK for story ${story.id}:`, result.ScheduleArn ?? result);
+    } catch (err) {
+      console.error(`[enqueueStoryGeneratorTasks] FAILED to create schedule "${scheduleName}" for story ${story.id}:`, err);
+      await prisma.sportStory.update({
+        where: { id: story.id },
+        data: { status: "failed", errorMessage: `Scheduler error: ${String(err)}` }
+      });
+      continue; // don't increment budget for a schedule that was never created
+    }
+
     // We increment budget here instead of the old dispatch cron
     await prisma.dailySpotlight.update({
         where: { id: spotlight.id },
         data: { requestsUsed: { increment: 1 } }
     });
-    
-    console.log(`Scheduled story ${story.id} for EXACTLY ${exactTime}`);
+
+    console.log(`[enqueueStoryGeneratorTasks] Scheduled story ${story.id} for EXACTLY ${exactTime}`);
   }
+
+  console.log(`[enqueueStoryGeneratorTasks] Done. Processed ${stories.length} stories for spotlight ${spotlight.id}`);
 }
