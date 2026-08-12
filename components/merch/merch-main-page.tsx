@@ -139,7 +139,7 @@ export function MerchMainPage() {
                 {/* Quick Add Overlay */}
                 <div className="absolute bottom-4 left-4 right-4 z-20 translate-y-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
                   <button className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary/90 py-3.5 font-display text-sm font-bold uppercase tracking-wider text-primary-foreground backdrop-blur-md transition-all hover:bg-primary hover:scale-[1.02]">
-                    Quick Add <ArrowRight className="size-4" />
+                    Coming Soon...
                   </button>
                 </div>
               </div>
