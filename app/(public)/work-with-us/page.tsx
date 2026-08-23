@@ -2,6 +2,19 @@ import { Megaphone, Mic, PenTool, Mail, ArrowRight } from "lucide-react"
 import { StatCounter } from "@/hooks/use-stat-counter"
 import { MissionStatement } from "@/components/site/mission-statement"
 
+// Shadcn UI Imports
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
+import { Button } from "@/components/ui/button"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+
 export const metadata = {
   title: "Work With Us | True Sports",
   description: "Partner with True Sports. Sponsorships, podcast integrations, and branding services.",
@@ -9,7 +22,7 @@ export const metadata = {
 
 export default function WorkWithUsPage() {
   return (
-    <main className="min-h-screen bg-background text-foreground pb-20">
+    <main className="min-h-screen bg-background pb-20 text-foreground">
       
       {/* 1. Hero Section with Background Image */}
       <section className="relative border-b border-border bg-black">
@@ -22,7 +35,7 @@ export default function WorkWithUsPage() {
         
         <div className="relative z-10 mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:py-32">
           <div className="max-w-3xl">
-            <h1 className="font-display text-5xl font-extrabold uppercase tracking-tight sm:text-7xl drop-shadow-lg">
+            <h1 className="font-display text-5xl font-extrabold uppercase tracking-tight drop-shadow-lg sm:text-7xl">
               Partner with <br />
               <span className="text-primary">True Sports</span>
             </h1>
@@ -35,19 +48,19 @@ export default function WorkWithUsPage() {
         </div>
       </section>
 
-      {/* 2. THE RESTORED SECTION: Quick Stats / Pillars */}
+      {/* 2. Quick Stats / Pillars */}
       <section className="border-b border-border bg-background">
         <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
-          <dl className="grid grid-cols-1 gap-8 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-border">
-            <div className="flex flex-col gap-2 sm:pl-0 pt-4 sm:pt-0">
+          <dl className="grid grid-cols-1 divide-y divide-border gap-8 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+            <div className="flex flex-col gap-2 pt-4 sm:pl-0 sm:pt-0">
               <dt className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Highly Engaged</dt>
               <dd className="font-display text-2xl font-bold">Instagram Community</dd>
             </div>
-            <div className="flex flex-col gap-2 sm:pl-8 pt-4 sm:pt-0">
+            <div className="flex flex-col gap-2 pt-4 sm:pl-8 sm:pt-0">
               <dt className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Coming Soon</dt>
               <dd className="font-display text-2xl font-bold">True Sports Podcast</dd>
             </div>
-            <div className="flex flex-col gap-2 sm:pl-8 pt-4 sm:pt-0">
+            <div className="flex flex-col gap-2 pt-4 sm:pl-8 sm:pt-0">
               <dt className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">In-House</dt>
               <dd className="font-display text-2xl font-bold">Creative & Branding</dd>
             </div>
@@ -122,7 +135,7 @@ export default function WorkWithUsPage() {
               <Megaphone className="size-6" />
             </div>
             <h3 className="font-display text-xl font-bold uppercase">Digital & Social</h3>
-            <p className="text-sm leading-relaxed text-muted-foreground flex-grow">
+            <p className="flex-grow text-sm leading-relaxed text-muted-foreground">
               Get your brand in front of our audience. We offer sponsored Instagram posts, 
               story takeovers, and premium ad placements right here on the True Sports scoreboard and news feeds.
             </p>
@@ -133,7 +146,7 @@ export default function WorkWithUsPage() {
               <Mic className="size-6" />
             </div>
             <h3 className="font-display text-xl font-bold uppercase">Podcast Integration</h3>
-            <p className="text-sm leading-relaxed text-muted-foreground flex-grow">
+            <p className="flex-grow text-sm leading-relaxed text-muted-foreground">
               Join us on the mic. We are launching the True Sports podcast and looking for 
               title sponsors, mid-roll ad reads, and product placements to seamlessly integrate into our sports debates.
             </p>
@@ -144,7 +157,7 @@ export default function WorkWithUsPage() {
               <PenTool className="size-6" />
             </div>
             <h3 className="font-display text-xl font-bold uppercase">Creative Studio</h3>
-            <p className="text-sm leading-relaxed text-muted-foreground flex-grow">
+            <p className="flex-grow text-sm leading-relaxed text-muted-foreground">
               True Sports was born as a branding agency. If you are a sports brand, athlete, or business 
               looking for elite logo design, identity rendering, or merchandise creation, our in-house studio is ready to build.
             </p>
@@ -152,7 +165,7 @@ export default function WorkWithUsPage() {
         </div>
       </section>
 
-      {/* 6. Contact Form Section */}
+      {/* 6. Contact Form Section (Updated to Shadcn UI) */}
       <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
         <div className="grid grid-cols-1 gap-16 lg:grid-cols-2">
           
@@ -174,39 +187,50 @@ export default function WorkWithUsPage() {
             <form className="flex flex-col gap-5">
               <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                 <div className="flex flex-col gap-2">
-                  <label htmlFor="name" className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Name</label>
-                  <input type="text" id="name" className="rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary" placeholder="John Doe" required />
+                  <Label htmlFor="name" className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Name</Label>
+                  <Input type="text" id="name" placeholder="John Doe" required />
                 </div>
                 <div className="flex flex-col gap-2">
-                  <label htmlFor="company" className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Company / Brand</label>
-                  <input type="text" id="company" className="rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary" placeholder="Acme Sports" />
+                  <Label htmlFor="company" className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Company / Brand</Label>
+                  <Input type="text" id="company" placeholder="Acme Sports" />
                 </div>
               </div>
 
               <div className="flex flex-col gap-2">
-                <label htmlFor="email" className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Email Address</label>
-                <input type="email" id="email" className="rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary" placeholder="john@example.com" required />
+                <Label htmlFor="email" className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Email Address</Label>
+                <Input type="email" id="email" placeholder="john@example.com" required />
               </div>
 
               <div className="flex flex-col gap-2">
-                <label htmlFor="interest" className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">I am interested in...</label>
-                <select id="interest" className="rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary">
-                  <option>Digital Sponsorships (Web/IG)</option>
-                  <option>Podcast Sponsorships</option>
-                  <option>Branding & Creative Services</option>
-                  <option>General Collaboration</option>
-                </select>
+                <Label htmlFor="interest" className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">I am interested in...</Label>
+                <Select required>
+                  <SelectTrigger id="interest">
+                    <SelectValue placeholder="Select an option" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="digital">Digital Sponsorships (Web/IG)</SelectItem>
+                    <SelectItem value="podcast">Podcast Sponsorships</SelectItem>
+                    <SelectItem value="branding">Branding & Creative Services</SelectItem>
+                    <SelectItem value="general">General Collaboration</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
 
               <div className="flex flex-col gap-2">
-                <label htmlFor="message" className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Message</label>
-                <textarea id="message" rows={4} className="rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary" placeholder="Tell us about your goals..." required></textarea>
+                <Label htmlFor="message" className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Message</Label>
+                <Textarea 
+                  id="message" 
+                  rows={4} 
+                  placeholder="Tell us about your goals..." 
+                  className="resize-none"
+                  required 
+                />
               </div>
 
-              <button type="submit" className="mt-2 flex items-center justify-center gap-2 rounded-md bg-primary px-4 py-2.5 text-sm font-bold tracking-wide text-primary-foreground transition-all hover:bg-primary/90">
+              <Button type="submit" size="lg" className="mt-2 w-full font-bold tracking-wide sm:w-auto">
                 Submit Inquiry
-                <ArrowRight className="size-4" />
-              </button>
+                <ArrowRight className="ml-2 size-4" />
+              </Button>
             </form>
           </div>
 

@@ -1,70 +1,87 @@
+import Image from "next/image"
 import { Clock } from "lucide-react"
-import { leagueAccent } from "@/lib/data" // Removed mock articles
+import { leagueAccent } from "@/lib/data"
 
-// Same helper we used in the ArticleFeed to make dates look like "2h ago"
+function getPlaceholderImage(league: string | null | undefined): string {
+  const map: Record<string, string> = {
+    nba: "/images/placeholders/nba.png",
+    nfl: "/images/placeholders/nfl.png",
+    mlb: "/images/placeholders/mlb.png",
+    nhl: "/images/placeholders/nhl.png",
+    soccer: "/images/placeholders/soccer.png",
+  }
+
+  const key = (league || "").toLowerCase().trim()
+  return map[key] || "/placeholder.svg"
+}
+
 function getRelativeTime(dateString: string) {
-  if (!dateString) return "Just now";
-  const date = new Date(dateString);
-  const now = new Date();
-  const diffInHours = Math.abs(now.getTime() - date.getTime()) / 3600000;
+  if (!dateString) return "Just now"
+  const date = new Date(dateString)
+  const now = new Date()
+  const diffInHours = Math.abs(now.getTime() - date.getTime()) / 3600000
 
   if (diffInHours < 1) {
-    const mins = Math.floor(diffInHours * 60);
-    return `${mins || 1}m ago`;
+    const mins = Math.floor(diffInHours * 60)
+    return `${mins || 1}m ago`
   }
   if (diffInHours < 24) {
-    return `${Math.floor(diffInHours)}h ago`;
+    return `${Math.floor(diffInHours)}h ago`
   }
-  return `${Math.floor(diffInHours / 24)}d ago`;
+  return `${Math.floor(diffInHours / 24)}d ago`
 }
 
 export function HeroFeature({ articles }: { articles: any[] }) {
-  // If the API fails or there are no articles, don't crash, just hide the section
   if (!articles || articles.length === 0) {
-    return null; 
+    return null
   }
 
-  // The #1 newest article is the main feature
-  const featuredArticle = articles[0];
-  
-  // Articles #2, #3, and #4 are the secondary list
-  const secondary = articles.slice(1, 4);
+  const featured = articles[0]
+  const secondary = articles.slice(1, 4)
+
+  // Always use the league placeholder image — never a remote/CMS image
+  const imageSrc = getPlaceholderImage(featured.league)
 
   return (
     <section className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:py-8">
       <div className="grid gap-5 lg:grid-cols-3">
         {/* Main feature */}
         <a
-          href={featuredArticle.link || "#"}
+          href={featured.link || "#"}
           target="_blank"
           rel="noopener noreferrer"
           className="group relative col-span-1 flex min-h-80 flex-col justify-end overflow-hidden rounded-xl border border-border lg:col-span-2 lg:min-h-[30rem]"
         >
-          <img
-            src={featuredArticle.image || "/placeholder.svg"}
-            alt={featuredArticle.title}
-            className="absolute inset-0 size-full object-cover transition-transform duration-500 group-hover:scale-105"
+          <Image
+            src={imageSrc}
+            alt={featured.title}
+            fill
+            priority
+            sizes="(min-width: 1024px) 66vw, 100vw"
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-transparent" />
           <div className="relative flex flex-col gap-3 p-5 sm:p-7">
             <div className="flex items-center gap-3">
-              <span className={`rounded-sm px-2 py-0.5 font-display text-xs font-bold uppercase tracking-wide text-primary-foreground ${leagueAccent(featuredArticle.league) || "bg-primary"}`}>
-                {featuredArticle.league}
+              <span
+                className={`rounded-sm px-2 py-0.5 font-display text-xs font-bold uppercase tracking-wide text-primary-foreground ${leagueAccent(featured.league) || "bg-primary"}`}
+              >
+                {featured.league}
               </span>
               <span className="font-display text-xs font-semibold uppercase tracking-wide text-foreground/70">
                 Featured
               </span>
             </div>
             <h1 className="max-w-2xl text-balance font-display text-3xl font-bold leading-tight text-foreground sm:text-4xl lg:text-5xl">
-              {featuredArticle.title}
+              {featured.title}
             </h1>
             <p className="max-w-xl text-pretty text-sm leading-relaxed text-foreground/80 sm:text-base line-clamp-2">
-              {featuredArticle.excerpt}
+              {featured.excerpt}
             </p>
             <div className="flex items-center gap-3 text-xs text-foreground/70">
-              <span className="font-medium text-foreground">{featuredArticle.author}</span>
+              <span className="font-medium text-foreground">{featured.author}</span>
               <span aria-hidden>·</span>
-              <span>{getRelativeTime(featuredArticle.date)}</span>
+              <span>{getRelativeTime(featured.date)}</span>
               <span aria-hidden>·</span>
               <span className="inline-flex items-center gap-1">
                 <Clock className="size-3" />
@@ -74,38 +91,29 @@ export function HeroFeature({ articles }: { articles: any[] }) {
           </div>
         </a>
 
-        {/* Secondary stories */}
+        {/* Secondary stories — no images */}
         <div className="flex flex-col gap-4">
           <h2 className="font-display text-sm font-bold uppercase tracking-widest text-muted-foreground">
             Top Stories
           </h2>
           <div className="flex flex-col divide-y divide-border">
             {secondary.map((a) => (
-              <a 
-                key={a.id} 
+              <a
+                key={a.id}
                 href={a.link || "#"}
                 target="_blank"
-                rel="noopener noreferrer" 
-                className="group flex gap-3 py-3 first:pt-0"
+                rel="noopener noreferrer"
+                className="group flex flex-col gap-2 py-4 first:pt-0"
               >
-                <div className="size-20 shrink-0 overflow-hidden rounded-md border border-border">
-                  <img
-                    src={a.image || "/placeholder.svg"}
-                    alt={a.title}
-                    className="size-full object-cover transition-transform duration-300 group-hover:scale-110"
-                  />
-                </div>
-                <div className="flex min-w-0 flex-col gap-1">
-                  <span
-                    className={`font-display text-[11px] font-bold uppercase tracking-widest ${leagueAccent(a.league)}`}
-                  >
-                    {a.league}
-                  </span>
-                  <h3 className="text-pretty text-sm font-semibold leading-snug text-foreground group-hover:text-primary line-clamp-2">
-                    {a.title}
-                  </h3>
-                  <span className="text-xs text-muted-foreground">{getRelativeTime(a.date)}</span>
-                </div>
+                <span
+                  className={`self-start font-display text-[11px] font-bold uppercase tracking-widest ${leagueAccent(a.league)}`}
+                >
+                  {a.league}
+                </span>
+                <h3 className="text-pretty text-sm font-semibold leading-snug text-foreground group-hover:text-primary line-clamp-2">
+                  {a.title}
+                </h3>
+                <span className="text-xs text-muted-foreground">{getRelativeTime(a.date)}</span>
               </a>
             ))}
           </div>

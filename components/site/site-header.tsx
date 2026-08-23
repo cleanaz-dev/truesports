@@ -155,9 +155,9 @@ export function SiteHeader({ spotlight }: SiteHeaderProps) {
           >
             Merch
           </a>
-          <Button className="hidden font-display font-semibold uppercase tracking-wide sm:inline-flex">
+          {/* <Button className="hidden font-display font-semibold uppercase tracking-wide sm:inline-flex">
             Subscribe
-          </Button>
+          </Button> */}
         </div>
       </div>
 

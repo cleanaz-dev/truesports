@@ -58,7 +58,7 @@ export function SiteFooter() {
                 ))}
               </ul>
             </div>
-            <div>
+            {/* <div>
               <h3 className="font-display text-sm font-bold uppercase tracking-widest text-foreground">
                 Sections
               </h3>
@@ -74,13 +74,13 @@ export function SiteFooter() {
                   </li>
                 ))}
               </ul>
-            </div>
+            </div> */}
             <div>
               <h3 className="font-display text-sm font-bold uppercase tracking-widest text-foreground">
                 Company
               </h3>
               <ul className="mt-3 flex flex-col gap-2">
-                {["About", "Contact", "Advertise", "Privacy"].map((c) => (
+                {["About", "Work With Us"].map((c) => (
                   <li key={c}>
                     <a
                       href="#"

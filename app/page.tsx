@@ -4,19 +4,19 @@ import { Scoreboard } from "@/components/site/scoreboard";
 import { SocialFeed } from "@/components/site/site-feed";
 import { SiteFooter } from "@/components/site/site-footer";
 import { SiteHeader } from "@/components/site/site-header";
+import { getAllArticles } from "@/lib/actions/get-all-articles";
 import { getSpotlight } from "@/lib/actions/get-spotlight";
-
-import { fetchAllScores, fetchAllNews } from "@/lib/sports-api"
+import { fetchAllScores } from "@/lib/sports-api"
 
 export const revalidate = 30
 
 export default async function HomePage() {
-  const [initialGames, allArticles] = await Promise.all([
+  const [initialGames, articles] = await Promise.all([
     fetchAllScores(),
-    fetchAllNews()
+    getAllArticles()
   ])
 
-    const spotlight = await getSpotlight();
+  const spotlight = await getSpotlight();
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -24,11 +24,8 @@ export default async function HomePage() {
       <main className="flex-1">
         <Scoreboard initialGames={initialGames} />
         
-        {/* Pass all articles to the Hero */}
-        <HeroFeature articles={allArticles} />
-        
-        {/* Pass the leftovers (skipping the first 4) to the Feed */}
-        <ArticleFeed articles={allArticles.slice(4)} />
+        <HeroFeature articles={articles} />
+        <ArticleFeed articles={articles.slice(4, 16)} />
         
         <SocialFeed />
       </main>

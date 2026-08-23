@@ -13,7 +13,7 @@ export function SocialFeed() {
           <div className="flex items-center gap-2.5">
             <FaInstagram  className="size-6 text-primary" />
             <h2 className="font-display text-2xl font-bold uppercase tracking-tight text-foreground">
-              On The Gram
+              Instagram
             </h2>
           </div>
           <a
