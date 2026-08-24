@@ -33,108 +33,224 @@ export function WorkWithUsHeroOverlay() {
   return (
     <AnimatePresence>
       {isVisible && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-8">
+        <>
           {/* Pitch Black Cinematic Backdrop */}
           <motion.div
+            key="backdrop"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.7, ease: "easeInOut" }}
-            className="absolute inset-0 bg-black/95 backdrop-blur-xl"
+            className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-xl"
             onClick={() => setIsVisible(false)} // Click outside to close
           />
 
-          {/* Expanded Cinematic Container */}
-          <motion.aside
-            initial={{ opacity: 0, scale: 0.97, filter: "blur(10px)" }}
-            animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-            exit={{ opacity: 0, scale: 0.97, filter: "blur(10px)" }}
-            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            className="relative z-10 flex w-full max-w-6xl flex-col overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-950 text-white shadow-2xl lg:flex-row"
-            aria-label="Partner with True Sports"
+          {/* MOBILE VIEW WRAPPER (< 1024px) */}
+          <motion.div
+            key="mobile-view"
+            className="pointer-events-none fixed inset-0 z-[101] flex items-center justify-center p-4 sm:p-8 lg:hidden"
+            exit={{ opacity: 0 }}
           >
-            <button
-              type="button"
-              onClick={() => setIsVisible(false)}
-              className="absolute right-6 top-6 z-50 rounded-full bg-black/50 p-2 text-white/60 backdrop-blur-md transition hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-              aria-label="Dismiss partnership message"
-            >
-              <X className="size-5" />
-            </button>
+            <MobileLayout setIsVisible={setIsVisible} />
+          </motion.div>
 
-            {/* Left Column: Bold Copy */}
-            <div className="flex flex-col justify-center p-8 sm:p-12 lg:w-[55%] lg:p-16">
-              <Reveal delay={0.1} y={20}>
-                <Image
-                  src="/images/ts-brands/ts-logo-mini-2.png"
-                  alt="True Sports"
-                  width={150}
-                  height={48}
-                  priority
-                  className="h-10 w-auto object-contain"
-                />
-              </Reveal>
-
-              <div className="mt-12">
-                <Reveal delay={0.2} y={20}>
-                  <p className="mb-4 text-xs font-bold uppercase tracking-[0.2em] text-primary">
-                    Partnership opportunities
-                  </p>
-                </Reveal>
-                
-                <Reveal delay={0.3} y={20}>
-                  <h2 className="font-display text-5xl font-black uppercase leading-[0.85] tracking-tighter sm:text-6xl lg:text-7xl">
-                    Put your brand <br className="hidden sm:block" /> in the game.
-                  </h2>
-                </Reveal>
-
-                <Reveal delay={0.4} y={20}>
-                  <p className="mt-6 max-w-lg text-lg leading-relaxed text-zinc-400">
-                    Connect with passionate sports fans through digital campaigns,
-                    podcast integrations, and creative brand experiences.
-                  </p>
-                </Reveal>
-              </div>
-
-              <Reveal delay={0.5} y={20} className="mt-12 flex flex-col gap-4 sm:flex-row sm:items-center">
-                <Link
-                  href="/work-with-us"
-                  className="group flex w-full items-center justify-center rounded-sm bg-primary px-8 py-4 font-display text-sm font-bold uppercase tracking-widest text-primary-foreground transition-all hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950 sm:w-auto"
-                >
-                  Work With Us
-                  <ArrowRight className="ml-2 size-4 transition-transform group-hover:translate-x-1" />
-                </Link>
-                
-                <button 
-                  onClick={() => setIsVisible(false)}
-                  className="w-full text-center text-xs font-semibold uppercase tracking-wider text-zinc-500 transition-colors hover:text-white sm:w-auto sm:px-4"
-                >
-                  Continue to Site
-                </button>
-              </Reveal>
-            </div>
-
-            {/* Right Column: Architectural Stats Grid */}
-            <div className="grid grid-cols-2 gap-px bg-zinc-800 lg:w-[45%]">
-              {stats.map((stat, i) => (
-                <div
-                  key={stat.label}
-                  className="flex flex-col items-center justify-center bg-zinc-950 p-8 text-center sm:p-12"
-                >
-                  <Reveal delay={0.5 + i * 0.1} y={15}>
-                    <dd className="font-display text-4xl font-black tracking-tighter text-white sm:text-5xl lg:text-6xl">
-                      {stat.value}
-                    </dd>
-                    <dt className="mt-2 text-[10px] font-bold uppercase tracking-widest text-zinc-500">
-                      {stat.label}
-                    </dt>
-                  </Reveal>
-                </div>
-              ))}
-            </div>
-          </motion.aside>
-        </div>
+          {/* DESKTOP VIEW WRAPPER (>= 1024px) */}
+          <motion.div
+            key="desktop-view"
+            className="pointer-events-none fixed inset-0 z-[101] hidden items-center justify-center p-8 lg:flex"
+            exit={{ opacity: 0 }}
+          >
+            <DesktopLayout setIsVisible={setIsVisible} />
+          </motion.div>
+        </>
       )}
     </AnimatePresence>
+  )
+}
+
+// ==========================================
+// 📱 MOBILE LAYOUT
+// ==========================================
+function MobileLayout({ setIsVisible }: { setIsVisible: (v: boolean) => void }) {
+  return (
+    <motion.aside
+      initial={{ opacity: 0, scale: 0.95, y: 20 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.95, y: 20 }}
+      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+      className="pointer-events-auto relative flex max-h-[85dvh] w-full max-w-md flex-col overflow-y-auto overflow-x-hidden rounded-2xl border border-zinc-800 bg-zinc-950 text-white shadow-2xl"
+    >
+      {/* Content Top */}
+      <div className="relative flex flex-col p-6 sm:p-8">
+        <button
+          type="button"
+          onClick={() => setIsVisible(false)}
+          className="absolute right-4 top-4 z-50 rounded-full bg-black/50 p-2 text-white/60 backdrop-blur-md transition hover:bg-white/10 hover:text-white"
+        >
+          <X className="size-5" />
+        </button>
+
+        <Reveal delay={0.1} y={10}>
+          <Image
+            src="/images/ts-brands/ts-logo-mini-2.png"
+            alt="True Sports"
+            width={120}
+            height={40}
+            priority
+            className="h-8 w-auto object-contain"
+          />
+        </Reveal>
+
+        <div className="mt-8">
+          <Reveal delay={0.2} y={10}>
+            <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.2em] text-primary">
+              Partnership opportunities
+            </p>
+          </Reveal>
+
+          <Reveal delay={0.3} y={10}>
+            <h2 className="font-display text-4xl font-black uppercase leading-[0.9] tracking-tighter sm:text-5xl">
+              Put your brand <br /> in the game.
+            </h2>
+          </Reveal>
+
+          <Reveal delay={0.4} y={10}>
+            <p className="mt-4 text-sm leading-relaxed text-zinc-400">
+              Connect with passionate sports fans through digital campaigns,
+              podcast integrations, and creative brand experiences.
+            </p>
+          </Reveal>
+        </div>
+
+        <Reveal delay={0.5} y={10} className="mt-8 flex flex-col gap-3">
+          <Link
+            href="/work-with-us"
+            className="flex w-full items-center justify-center rounded-sm bg-primary px-6 py-4 font-display text-sm font-bold uppercase tracking-widest text-primary-foreground transition-all hover:bg-primary/90"
+          >
+            Work With Us
+            <ArrowRight className="ml-2 size-4" />
+          </Link>
+          <button
+            onClick={() => setIsVisible(false)}
+            className="w-full py-2 text-center text-xs font-semibold uppercase tracking-wider text-zinc-500 transition-colors hover:text-white"
+          >
+            Continue to Site
+          </button>
+        </Reveal>
+      </div>
+
+      {/* Stats Bottom (2x2 Grid) */}
+      <div className="mt-auto shrink-0 grid grid-cols-2 border-t border-zinc-800 bg-zinc-800 gap-px">
+        {stats.map((stat, i) => (
+          <div
+            key={stat.label}
+            className="flex flex-col items-center justify-center bg-zinc-950 p-6 text-center"
+          >
+            <Reveal delay={0.5 + i * 0.1} y={10}>
+              <dd className="font-display text-3xl font-black tracking-tighter text-white sm:text-4xl">
+                {stat.value}
+              </dd>
+              <dt className="mt-1 text-[9px] font-bold uppercase tracking-widest text-zinc-500">
+                {stat.label}
+              </dt>
+            </Reveal>
+          </div>
+        ))}
+      </div>
+    </motion.aside>
+  )
+}
+
+// ==========================================
+// 🖥️ DESKTOP LAYOUT
+// ==========================================
+function DesktopLayout({ setIsVisible }: { setIsVisible: (v: boolean) => void }) {
+  return (
+    <motion.aside
+      initial={{ opacity: 0, scale: 0.97, filter: "blur(10px)" }}
+      animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+      exit={{ opacity: 0, scale: 0.97, filter: "blur(10px)" }}
+      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+      className="pointer-events-auto relative flex w-full max-w-6xl flex-row overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-950 text-white shadow-2xl"
+    >
+      <button
+        type="button"
+        onClick={() => setIsVisible(false)}
+        className="absolute right-6 top-6 z-50 rounded-full bg-black/50 p-2 text-white/60 backdrop-blur-md transition hover:bg-white/10 hover:text-white"
+      >
+        <X className="size-5" />
+      </button>
+
+      {/* Left Column */}
+      <div className="flex w-[55%] flex-col justify-center p-12 xl:p-16">
+        <Reveal delay={0.1} y={20}>
+          <Image
+            src="/images/ts-brands/ts-logo-mini-2.png"
+            alt="True Sports"
+            width={150}
+            height={48}
+            priority
+            className="h-10 w-auto object-contain"
+          />
+        </Reveal>
+
+        <div className="mt-12">
+          <Reveal delay={0.2} y={20}>
+            <p className="mb-4 text-xs font-bold uppercase tracking-[0.2em] text-primary">
+              Partnership opportunities
+            </p>
+          </Reveal>
+
+          <Reveal delay={0.3} y={20}>
+            <h2 className="font-display text-6xl font-black uppercase leading-[0.85] tracking-tighter xl:text-7xl">
+              Put your brand <br /> in the game.
+            </h2>
+          </Reveal>
+
+          <Reveal delay={0.4} y={20}>
+            <p className="mt-6 max-w-lg text-lg leading-relaxed text-zinc-400">
+              Connect with passionate sports fans through digital campaigns,
+              podcast integrations, and creative brand experiences.
+            </p>
+          </Reveal>
+        </div>
+
+        <Reveal delay={0.5} y={20} className="mt-12 flex items-center gap-6">
+          <Link
+            href="/work-with-us"
+            className="group flex items-center justify-center rounded-sm bg-primary px-8 py-4 font-display text-sm font-bold uppercase tracking-widest text-primary-foreground transition-all hover:bg-primary/90"
+          >
+            Work With Us
+            <ArrowRight className="ml-2 size-4 transition-transform group-hover:translate-x-1" />
+          </Link>
+
+          <button
+            onClick={() => setIsVisible(false)}
+            className="px-4 text-xs font-semibold uppercase tracking-wider text-zinc-500 transition-colors hover:text-white"
+          >
+            Continue to Site
+          </button>
+        </Reveal>
+      </div>
+
+      {/* Right Column */}
+      <div className="grid w-[45%] grid-cols-2 gap-px bg-zinc-800">
+        {stats.map((stat, i) => (
+          <div
+            key={stat.label}
+            className="flex flex-col items-center justify-center bg-zinc-950 p-12 text-center"
+          >
+            <Reveal delay={0.5 + i * 0.1} y={15}>
+              <dd className="font-display text-5xl font-black tracking-tighter text-white xl:text-6xl">
+                {stat.value}
+              </dd>
+              <dt className="mt-2 text-[10px] font-bold uppercase tracking-widest text-zinc-500">
+                {stat.label}
+              </dt>
+            </Reveal>
+          </div>
+        ))}
+      </div>
+    </motion.aside>
   )
 }
