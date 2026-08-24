@@ -1,20 +1,18 @@
-import Image from "next/image"
-import { Clock } from "lucide-react"
-import { leagueAccent } from "@/lib/data"
-import { getPlaceholderImage, getRelativeTime } from "@/lib/utils"
-
-
+import Image from "next/image";
+import { Clock } from "lucide-react";
+import { leagueAccent } from "@/lib/data";
+import { getPlaceholderImage, getRelativeTime } from "@/lib/utils";
 
 export function HeroFeature({ articles }: { articles: any[] }) {
   if (!articles || articles.length === 0) {
-    return null
+    return null;
   }
 
-  const featured = articles[0]
-  const secondary = articles.slice(1, 4)
+  const featured = articles[0];
+  const secondary = articles.slice(1, 4);
 
   // Always use the league placeholder image — never a remote/CMS image
-  const imageSrc = getPlaceholderImage(featured.league)
+  const imageSrc = getPlaceholderImage(featured.league);
 
   return (
     <section className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:py-8">
@@ -24,7 +22,7 @@ export function HeroFeature({ articles }: { articles: any[] }) {
           href={featured.link || "#"}
           target="_blank"
           rel="noopener noreferrer"
-          className="group relative col-span-1 flex min-h-80 flex-col justify-end overflow-hidden rounded-xl border border-border lg:col-span-2 lg:min-h-[30rem]"
+          className="group relative col-span-1 flex aspect-[4/3] flex-col justify-end overflow-hidden rounded-xl border border-border lg:col-span-2 lg:aspect-auto lg:min-h-[30rem]"
         >
           <Image
             src={imageSrc}
@@ -53,13 +51,14 @@ export function HeroFeature({ articles }: { articles: any[] }) {
               {featured.excerpt}
             </p>
             <div className="flex items-center gap-3 text-xs text-foreground/70">
-              <span className="font-medium text-foreground">{featured.author}</span>
+              {/* <span className="font-medium text-foreground">
+                {featured.author}
+              </span> */}
               <span aria-hidden>·</span>
               <span>{getRelativeTime(featured.date)}</span>
               <span aria-hidden>·</span>
               <span className="inline-flex items-center gap-1">
-                <Clock className="size-3" />
-                5 min read
+                <Clock className="size-3" />5 min read
               </span>
             </div>
           </div>
@@ -87,12 +86,14 @@ export function HeroFeature({ articles }: { articles: any[] }) {
                 <h3 className="text-pretty text-sm font-semibold leading-snug text-foreground group-hover:text-primary line-clamp-2">
                   {a.title}
                 </h3>
-                <span className="text-xs text-muted-foreground">{getRelativeTime(a.date)}</span>
+                <span className="text-xs text-muted-foreground">
+                  {getRelativeTime(a.date)}
+                </span>
               </a>
             ))}
           </div>
         </div>
       </div>
     </section>
-  )
+  );
 }
