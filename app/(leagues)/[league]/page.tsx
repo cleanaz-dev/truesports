@@ -1,10 +1,9 @@
-import Link from "next/link";
-import { TrendingUp, ShoppingBag, ArrowRight, Tag } from "lucide-react";
-import { articles, leagues, socialPosts, leagueAccent } from "@/lib/data";
+import { TrendingUp } from "lucide-react";
+import { leagues, socialPosts, leagueAccent } from "@/lib/data";
+import { League } from "@/lib/generated/prisma/enums";
 
 import { FeaturedDrop } from "@/components/leagues/featured-drop";
 import { SocialCard } from "@/components/leagues/social-card";
-import { ArticleCard } from "@/components/leagues/article-card";
 
 import { RandomBanner } from "@/components/promo/random-banner";
 import { PromoBanner } from "@/components/promo/promo-banner";
@@ -13,8 +12,8 @@ import { MerchBanner } from "@/components/promo/merch-banner";
 import { MerchMainPage } from "@/components/merch/merch-main-page";
 import { FaInstagram } from "react-icons/fa";
 
-// IMPORT THE NEW FETCHER
-import { fetchLeagueNews } from "@/lib/sports-api";
+import { getLeagueArticles } from "@/lib/actions/get-leagure-articles";
+import { LeagueArticleFeed } from "@/components/articles/league-article-feed";
 
 interface Params {
   params: Promise<{
@@ -26,12 +25,11 @@ export default async function LeaguePage({ params }: Params) {
   const resolvedParams = await params;
   const leagueParam = resolvedParams.league.toLowerCase();
 
-  // 1. INTERCEPT FOR MERCH PAGE
+  // Merch is a special-cased route, not a real league
   if (leagueParam === "merch") {
     return <MerchMainPage />;
   }
 
-  // 2. Validate the league
   const currentLeague = leagues.find((l) => l.toLowerCase() === leagueParam);
 
   if (!currentLeague) {
@@ -44,30 +42,8 @@ export default async function LeaguePage({ params }: Params) {
     );
   }
 
-  // 3. FETCH LIVE NEWS FROM ESPN
-  const liveNews = await fetchLeagueNews(currentLeague);
-
-  // 4. DATA MERGING & FALLBACK LOGIC
-  // If the API fails or returns empty, we fall back to your static articles
-  let displayArticles = liveNews.length > 0 ? liveNews : articles.filter((a) => a.league === currentLeague);
-  
-  const featuredArticle = displayArticles[0] || articles[0];
-  let otherArticles = displayArticles.slice(1);
-
-  // Ensure we always have at least 4 articles for the grid layout
-  if (otherArticles.length < 4) {
-    // Fill the remaining spots with static filler articles to keep the UI looking good
-    const staticLeagueArticles = articles.filter((a) => a.league === currentLeague);
-    
-    const filler = staticLeagueArticles.filter(
-      (a) =>
-        a.id !== featuredArticle.id &&
-        // Fix: Explicitly type 'oa' as 'any' to satisfy TypeScript's strict mode
-        !otherArticles.find((oa: any) => oa.id === a.id),
-    );
-    
-    otherArticles = [...otherArticles, ...filler].slice(0, 4);
-  }
+  const articles = await getLeagueArticles(currentLeague.toUpperCase() as League);
+  const [featuredArticle, ...otherArticles] = articles;
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
@@ -77,16 +53,6 @@ export default async function LeaguePage({ params }: Params) {
         >
           {currentLeague} News
         </h1>
-        {/* Optional: Show a live indicator if data is coming from the API */}
-        {liveNews.length > 0 && (
-           <span className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-red-500">
-             <span className="relative flex size-2">
-               <span className="absolute inline-flex size-full animate-ping rounded-full bg-red-400 opacity-75" />
-               <span className="relative inline-flex size-2 rounded-full bg-red-500" />
-             </span>
-             Live Updates
-           </span>
-        )}
       </div>
 
       <div className="grid grid-cols-1 gap-10 lg:grid-cols-12">
@@ -107,20 +73,19 @@ export default async function LeaguePage({ params }: Params) {
                 Latest Drops
               </h3>
             </div>
-            <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2">
-              {otherArticles.map((article: any) => (
-                <ArticleCard key={article.id} article={article} />
-              ))}
-            </div>
+            
+            {/* FIXED: Passed the array directly. LeagueArticleFeed handles the grid internally. */}
+            <LeagueArticleFeed articles={otherArticles} />
+            
           </div>
         </div>
 
         <aside className="lg:col-span-4 flex flex-col gap-8">
           <div className="rounded-2xl bg-card/40 p-6 shadow-sm">
             <div className="flex items-center gap-2.5 mb-4">
-                <FaInstagram  className="size-6 text-primary" />
+              <FaInstagram className="size-6 text-primary" />
               <h3 className="font-display text-lg font-bold uppercase tracking-tight text-foreground">
-                ON THE GRAM
+                INSTAGRAM
               </h3>
             </div>
             <div className="flex flex-col gap-6">

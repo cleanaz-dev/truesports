@@ -1,18 +1,24 @@
-// in your actions/prisma file
 import { prisma } from "../prisma";
 import { League } from "../generated/prisma/enums";
 
-export async function getLeagueArticles(league: League, excludeId: string) {
+export async function getLeagueArticles(league: League, excludeId?: string) {
   return await prisma.article.findMany({
     where: {
       league,
-      id: {
-        not: excludeId, // Don't show the article they are currently reading!
-      },
+      ...(excludeId ? { id: { not: excludeId } } : {}),
     },
-    orderBy: {
-      createdAt: "desc",
+    include: {
+      author: true
     },
-    take: 6,
+    orderBy: { createdAt: "desc" },
+    take: 7,
   });
 }
+
+// Type of the array the function resolves to
+export type LeagueArticles = Awaited<ReturnType<typeof getLeagueArticles>>;
+
+// Type of a single article in that array — this is what
+// FeaturedDrop / ArticleCard should actually type their props as,
+// instead of the old static `Article` type from lib/data
+export type LeagueArticle = LeagueArticles[number];

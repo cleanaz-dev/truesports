@@ -1,6 +1,6 @@
 import { leagues } from "@/lib/data";
+import { SOCIALS } from "@/lib/socials";
 import Image from "next/image";
-import { FaInstagram, FaTwitter, FaYoutube } from "react-icons/fa";
 
 export function SiteFooter() {
   return (
@@ -28,12 +28,14 @@ export function SiteFooter() {
               leagues you love. Your front-row seat to the game.
             </p>
             <div className="mt-4 flex items-center gap-2">
-              {[FaInstagram, FaTwitter, FaYoutube].map((Icon, i) => (
+              {SOCIALS.map(({ name, url, icon: Icon }) => (
                 <a
-                  key={i}
-                  href="#"
+                  key={name}
+                  href={url}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="inline-flex size-9 items-center justify-center rounded-md border border-border text-muted-foreground transition-colors hover:border-primary/50 hover:text-foreground"
-                  aria-label="Social link"
+                  aria-label={name}
                 >
                   <Icon className="size-4" />
                 </a>

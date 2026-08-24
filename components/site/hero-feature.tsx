@@ -1,35 +1,9 @@
 import Image from "next/image"
 import { Clock } from "lucide-react"
 import { leagueAccent } from "@/lib/data"
+import { getPlaceholderImage, getRelativeTime } from "@/lib/utils"
 
-function getPlaceholderImage(league: string | null | undefined): string {
-  const map: Record<string, string> = {
-    nba: "/images/placeholders/nba.png",
-    nfl: "/images/placeholders/nfl.png",
-    mlb: "/images/placeholders/mlb.png",
-    nhl: "/images/placeholders/nhl.png",
-    soccer: "/images/placeholders/soccer.png",
-  }
 
-  const key = (league || "").toLowerCase().trim()
-  return map[key] || "/placeholder.svg"
-}
-
-function getRelativeTime(dateString: string) {
-  if (!dateString) return "Just now"
-  const date = new Date(dateString)
-  const now = new Date()
-  const diffInHours = Math.abs(now.getTime() - date.getTime()) / 3600000
-
-  if (diffInHours < 1) {
-    const mins = Math.floor(diffInHours * 60)
-    return `${mins || 1}m ago`
-  }
-  if (diffInHours < 24) {
-    return `${Math.floor(diffInHours)}h ago`
-  }
-  return `${Math.floor(diffInHours / 24)}d ago`
-}
 
 export function HeroFeature({ articles }: { articles: any[] }) {
   if (!articles || articles.length === 0) {
