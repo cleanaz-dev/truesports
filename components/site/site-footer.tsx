@@ -15,7 +15,8 @@ export function SiteFooter() {
                   alt="True Sports Logo"
                   width={36}
                   height={36}
-                  className="rounded-full"
+                  className="rounded-full w-10"
+                  style={{ height: "auto" }}
                 />
                 <span className="font-display text-lg font-bold uppercase tracking-tight text-foreground">
                   True Sports
