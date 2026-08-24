@@ -6,7 +6,15 @@ export async function getAllArticles() {
             createdAt: "desc"
         },
         include: {
-            author: true
+            author: {
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    image: true
+
+                }
+            }
         },
         take: 20
     })
