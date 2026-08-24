@@ -48,7 +48,7 @@ export function WorkWithUsHeroOverlay() {
           {/* MOBILE VIEW WRAPPER (< 1024px) */}
           <motion.div
             key="mobile-view"
-            className="pointer-events-none fixed inset-0 z-[101] flex items-center justify-center p-4 sm:p-8 lg:hidden"
+            className="pointer-events-none fixed inset-0 z-[101] flex items-center justify-center p-4 lg:hidden"
             exit={{ opacity: 0 }}
           >
             <MobileLayout setIsVisible={setIsVisible} />
@@ -69,18 +69,32 @@ export function WorkWithUsHeroOverlay() {
 }
 
 // ==========================================
-// 📱 MOBILE LAYOUT
+// 📱 MOBILE LAYOUT (Timed Sequence)
 // ==========================================
 function MobileLayout({ setIsVisible }: { setIsVisible: (v: boolean) => void }) {
+  const [step, setStep] = useState(0)
+
+  useEffect(() => {
+    // Sequence timing: 
+    // Wait 3.2s -> Show second stat group
+    // Wait 6.4s -> Show final buttons
+    const timer1 = setTimeout(() => setStep(1), 3200)
+    const timer2 = setTimeout(() => setStep(2), 6400)
+
+    return () => {
+      clearTimeout(timer1)
+      clearTimeout(timer2)
+    }
+  }, [])
+
   return (
     <motion.aside
       initial={{ opacity: 0, scale: 0.95, y: 20 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95, y: 20 }}
       transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-      className="pointer-events-auto relative flex max-h-[85dvh] w-full max-w-md flex-col overflow-y-auto overflow-x-hidden rounded-2xl border border-zinc-800 bg-zinc-950 text-white shadow-2xl"
+      className="pointer-events-auto relative flex w-full max-w-sm flex-col overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-950 text-white shadow-2xl"
     >
-      {/* Content Top */}
       <div className="relative flex flex-col p-6 sm:p-8">
         <button
           type="button"
@@ -122,47 +136,90 @@ function MobileLayout({ setIsVisible }: { setIsVisible: (v: boolean) => void }) 
           </Reveal>
         </div>
 
-        <Reveal delay={0.5} y={10} className="mt-8 flex flex-col gap-3">
-          <Link
-            href="/work-with-us"
-            className="flex w-full items-center justify-center rounded-sm bg-primary px-6 py-4 font-display text-sm font-bold uppercase tracking-widest text-primary-foreground transition-all hover:bg-primary/90"
-          >
-            Work With Us
-            <ArrowRight className="ml-2 size-4" />
-          </Link>
-          <button
-            onClick={() => setIsVisible(false)}
-            className="w-full py-2 text-center text-xs font-semibold uppercase tracking-wider text-zinc-500 transition-colors hover:text-white"
-          >
-            Continue to Site
-          </button>
-        </Reveal>
-      </div>
+        {/* Dynamic Sequence Area (Fixed Height prevents layout jumps) */}
+        <div className="relative mt-8 h-[116px] w-full">
+          <AnimatePresence mode="wait">
+            
+            {/* STEP 0: Reach & Followers */}
+            {step === 0 && (
+              <motion.div
+                key="step-0"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.4 }}
+                className="absolute inset-0 flex items-center justify-between gap-3"
+              >
+                <MobileStatItem stat={stats[0]} />
+                <MobileStatItem stat={stats[1]} />
+              </motion.div>
+            )}
 
-      {/* Stats Bottom (2x2 Grid) */}
-      <div className="mt-auto shrink-0 grid grid-cols-2 border-t border-zinc-800 bg-zinc-800 gap-px">
-        {stats.map((stat, i) => (
-          <div
-            key={stat.label}
-            className="flex flex-col items-center justify-center bg-zinc-950 p-6 text-center"
-          >
-            <Reveal delay={0.5 + i * 0.1} y={10}>
-              <dd className="font-display text-3xl font-black tracking-tighter text-white sm:text-4xl">
-                {stat.value}
-              </dd>
-              <dt className="mt-1 text-[9px] font-bold uppercase tracking-widest text-zinc-500">
-                {stat.label}
-              </dt>
-            </Reveal>
-          </div>
-        ))}
+            {/* STEP 1: Views & Engagements */}
+            {step === 1 && (
+              <motion.div
+                key="step-1"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.4 }}
+                className="absolute inset-0 flex items-center justify-between gap-3"
+              >
+                <MobileStatItem stat={stats[2]} />
+                <MobileStatItem stat={stats[3]} />
+              </motion.div>
+            )}
+
+            {/* STEP 2: Buttons */}
+            {step === 2 && (
+              <motion.div
+                key="step-2"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.4 }}
+                className="absolute inset-0 flex flex-col justify-center gap-3"
+              >
+                <Link
+                  href="/work-with-us"
+                  className="flex w-full items-center justify-center rounded-sm bg-primary px-6 py-4 font-display text-sm font-bold uppercase tracking-widest text-primary-foreground transition-all hover:bg-primary/90"
+                >
+                  Work With Us
+                  <ArrowRight className="ml-2 size-4" />
+                </Link>
+                <button
+                  onClick={() => setIsVisible(false)}
+                  className="w-full py-2 text-center text-xs font-semibold uppercase tracking-wider text-zinc-500 transition-colors hover:text-white"
+                >
+                  Continue to Site
+                </button>
+              </motion.div>
+            )}
+
+          </AnimatePresence>
+        </div>
       </div>
     </motion.aside>
   )
 }
 
+// Small helper component to keep the mobile stat boxes clean
+function MobileStatItem({ stat }: { stat: { value: string; label: string } }) {
+  return (
+    <div className="flex w-full flex-col items-center justify-center rounded-xl border border-zinc-800/60 bg-zinc-900/40 py-4 text-center">
+      <dd className="font-display text-2xl font-black tracking-tighter text-white sm:text-3xl">
+        {stat.value}
+      </dd>
+      <dt className="mt-1 text-[9px] font-bold uppercase tracking-widest text-zinc-500">
+        {stat.label}
+      </dt>
+    </div>
+  )
+}
+
+
 // ==========================================
-// 🖥️ DESKTOP LAYOUT
+// 🖥️ DESKTOP LAYOUT (Unchanged)
 // ==========================================
 function DesktopLayout({ setIsVisible }: { setIsVisible: (v: boolean) => void }) {
   return (
