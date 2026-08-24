@@ -13,8 +13,6 @@ export function SingleArticlePage({
   const title = article.title || "Untitled Article"
   const content = article.content || "<p>No content available.</p>"
   const league = article.league || "Buzz"
-  const authorName = article.author?.name || "Staff Writer"
-  const authorInitials = authorName.substring(0, 2).toUpperCase()
   
   const formattedDate = new Intl.DateTimeFormat("en-US", {
     month: "short",
@@ -49,19 +47,11 @@ export function SingleArticlePage({
               <div className="mt-4 flex flex-wrap items-center justify-between gap-4 border-y border-border/50 py-5">
                 <div className="flex items-center gap-4">
                   <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-muted font-display text-sm font-bold text-muted-foreground">
-                    {article.author?.image ? (
-                      <img 
-                        src={article.author.image} 
-                        alt={authorName} 
-                        className="size-full rounded-full object-cover"
-                      />
-                    ) : (
-                      authorInitials
-                    )}
+                    TSS
                   </div>
                   <div className="flex flex-col">
                     <span className="font-display text-sm font-bold uppercase tracking-wide text-foreground">
-                      {authorName}
+                      True Sports Staff
                     </span>
                     <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-widest text-muted-foreground">
                       <span className="inline-flex items-center gap-1">

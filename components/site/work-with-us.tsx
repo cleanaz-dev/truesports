@@ -187,7 +187,7 @@ export default function WorkWithUsPage() {
             
             <div className="mt-8 flex items-center gap-4 text-sm font-medium text-muted-foreground">
               <Mail className="size-5" />
-              partnerships@truesports.com
+              info@truesportslive.com
             </div>
           </div>
 

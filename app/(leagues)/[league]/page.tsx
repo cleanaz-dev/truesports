@@ -81,7 +81,7 @@ export default async function LeaguePage({ params }: Params) {
         </div>
 
         <aside className="lg:col-span-4 flex flex-col gap-8">
-          <div className="rounded-2xl bg-card/40 p-6 shadow-sm">
+          {/* <div className="rounded-2xl bg-card/40 p-6 shadow-sm">
             <div className="flex items-center gap-2.5 mb-4">
               <FaInstagram className="size-6 text-primary" />
               <h3 className="font-display text-lg font-bold uppercase tracking-tight text-foreground">
@@ -93,7 +93,7 @@ export default async function LeaguePage({ params }: Params) {
                 <SocialCard key={post.id} post={post} />
               ))}
             </div>
-          </div>
+          </div> */}
 
           <div className="sticky top-6">
             <MerchBanner />

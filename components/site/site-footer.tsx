@@ -83,7 +83,7 @@ export function SiteFooter() {
                 Company
               </h3>
               <ul className="mt-3 flex flex-col gap-2">
-                {["About", "Work With Us"].map((c) => (
+                {["Work With Us"].map((c) => (
                   <li key={c}>
                     <a
                       href="#"
