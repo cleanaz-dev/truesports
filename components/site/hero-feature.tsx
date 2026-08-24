@@ -59,7 +59,7 @@ export function HeroFeature({ articles }: { articles: Article[] }) {
               {featured.author && (
                 <>
                   <span className="font-medium text-foreground">
-                    {featured.author.name}
+                    {/* {featured.author.name} */} True Sports Staff
                   </span>
                   <span aria-hidden>·</span>
                 </>
