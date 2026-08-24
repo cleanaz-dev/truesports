@@ -28,7 +28,7 @@ export default async function HomePage() {
         <Scoreboard initialGames={initialGames} />
         <HeroFeature articles={heroArticles} />
         <ArticleFeed articles={feedArticles} />
-        <SocialFeed />
+        {/* <SocialFeed /> <SocialFeed /> */}
       </main>
 
       <SiteFooter />

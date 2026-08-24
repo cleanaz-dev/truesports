@@ -77,7 +77,7 @@ function ArticleCard({ article }: { article: Article }) {
           {article.author && (
             <>
               <span className="max-w-full truncate text-foreground/80">
-                {article.author.name}
+                {/* {article.author.name} */} True Sports Staff
               </span>
               <span
                 aria-hidden="true"

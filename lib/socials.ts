@@ -13,11 +13,11 @@ export const SOCIALS: Social[] = [
     url: "https://www.instagram.com/truesportslive",
     icon: FaInstagram,
   },
-  {
-    name: "Twitter",
-    url: "https://x.com/truesportsceo",
-    icon: FaTwitter,
-  },
+  // {
+  //   name: "Twitter",
+  //   url: "https://x.com/truesportsceo",
+  //   icon: FaTwitter,
+  // },
   {
     name: "YouTube",
     url: "https://www.youtube.com/@truesportslive",
