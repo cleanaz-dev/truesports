@@ -88,12 +88,18 @@ export function SiteHeader({ spotlight }: SiteHeaderProps) {
                 className="flex items-center gap-2 px-4 pt-2"
                 onClick={() => setOpen(false)}
               >
+                {/* 
+                  FIXED: 
+                  - Reduced size to 32x32 
+                  - Removed 'rounded-full' 
+                  - Added 'object-contain shrink-0' to prevent cropping/distortion 
+                */}
                 <Image
                   src="/images/meta-logo-1.png"
                   alt="True Sports Logo"
-                  width={36}
-                  height={36}
-                  className="rounded-full"
+                  width={32}
+                  height={32}
+                  className="object-contain shrink-0"
                 />
                 <span className="font-display text-lg font-bold uppercase tracking-tight text-foreground">
                   True Sports
@@ -116,12 +122,13 @@ export function SiteHeader({ spotlight }: SiteHeaderProps) {
         </Sheet>
 
         <a href="/" className="flex items-center gap-2">
+          {/* Also updated the desktop logo to ensure it doesn't crop weirdly either */}
           <Image
             src="/images/meta-logo-1.png"
             alt="True Sports Logo"
             width={40}
             height={40}
-            className="rounded-full"
+            className="object-contain shrink-0"
           />
           <span className="font-display text-xl font-bold uppercase tracking-tight text-foreground">
             True Sports
@@ -155,9 +162,6 @@ export function SiteHeader({ spotlight }: SiteHeaderProps) {
           >
             Merch
           </a>
-          {/* <Button className="hidden font-display font-semibold uppercase tracking-wide sm:inline-flex">
-            Subscribe
-          </Button> */}
         </div>
       </div>
 
