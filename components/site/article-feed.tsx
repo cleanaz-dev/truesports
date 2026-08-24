@@ -1,79 +1,101 @@
 import Link from "next/link"
 import { Clock } from "lucide-react"
 
+import type { Article } from "@/lib/actions/get-all-articles"
+
 const LEAGUE_ORDER = ["NBA", "NFL", "MLB", "SOCCER", "NHL"]
 
-function getRelativeTime(dateString: string) {
-  if (!dateString) return "Just now"
-  const date = new Date(dateString)
-  const now = new Date()
-  const diffInHours = Math.abs(now.getTime() - date.getTime()) / 3600000
+function getRelativeTime(value: Date | string | null | undefined) {
+  if (!value) return "Just now"
 
-  if (diffInHours < 1) {
-    const mins = Math.floor(diffInHours * 60)
-    return `${mins || 1}m ago`
+  const date = new Date(value)
+
+  if (Number.isNaN(date.getTime())) {
+    return "Just now"
   }
+
+  const diffInMs = Math.max(0, Date.now() - date.getTime())
+  const diffInMinutes = Math.floor(diffInMs / 60_000)
+  const diffInHours = Math.floor(diffInMs / 3_600_000)
+  const diffInDays = Math.floor(diffInMs / 86_400_000)
+
+  if (diffInMinutes < 60) {
+    return `${Math.max(1, diffInMinutes)}m ago`
+  }
+
   if (diffInHours < 24) {
-    return `${Math.floor(diffInHours)}h ago`
+    return `${diffInHours}h ago`
   }
-  return `${Math.floor(diffInHours / 24)}d ago`
+
+  return `${diffInDays}d ago`
 }
 
-function groupByLeague(articles: any[]) {
-  const groups = new Map<string, any[]>()
+function groupByLeague(articles: Article[]) {
+  const groups = new Map<string, Article[]>()
 
-  for (const a of articles) {
-    const key = (a.league || "OTHER").toUpperCase()
-    if (!groups.has(key)) groups.set(key, [])
-    groups.get(key)!.push(a)
+  for (const article of articles) {
+    const league = article.league?.trim().toUpperCase() || "OTHER"
+    const group = groups.get(league) ?? []
+
+    group.push(article)
+    groups.set(league, group)
   }
 
-  return Array.from(groups.entries()).sort(([a], [b]) => {
-    const ai = LEAGUE_ORDER.indexOf(a)
-    const bi = LEAGUE_ORDER.indexOf(b)
-    if (ai === -1 && bi === -1) return a.localeCompare(b)
-    if (ai === -1) return 1
-    if (bi === -1) return -1
-    return ai - bi
+  return Array.from(groups.entries()).sort(([leagueA], [leagueB]) => {
+    const indexA = LEAGUE_ORDER.indexOf(leagueA)
+    const indexB = LEAGUE_ORDER.indexOf(leagueB)
+
+    if (indexA === -1 && indexB === -1) {
+      return leagueA.localeCompare(leagueB)
+    }
+
+    if (indexA === -1) return 1
+    if (indexB === -1) return -1
+
+    return indexA - indexB
   })
 }
 
-function ArticleCard({ a }: { a: any }) {
-  // Use the ID from your Prisma model to route dynamically
-  const articleUrl = `/articles/${a.id}`
-
+function ArticleCard({ article }: { article: Article }) {
   return (
     <Link
-      href={articleUrl}
-      className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-border/40 bg-card/40 p-6 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:bg-card/80 hover:shadow-2xl hover:shadow-primary/5"
+      href={`/articles/${article.id}`}
+      className="group relative flex min-w-0 flex-col overflow-hidden rounded-2xl border border-border/40 bg-card/40 p-4 backdrop-blur-sm transition-all duration-300 hover:border-primary/50 hover:bg-card/80 hover:shadow-xl sm:p-6 sm:hover:-translate-y-1"
     >
-      {/* Subtle hover accent line at the top */}
-      <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+      <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
 
-      <div className="flex h-full flex-col gap-4">
-        <h3 className="text-balance font-display text-xl font-extrabold leading-snug text-foreground transition-colors group-hover:text-primary">
-          {a.title}
+      <div className="flex h-full min-w-0 flex-col gap-3 sm:gap-4">
+        <h3 className="break-words font-display text-lg font-extrabold leading-snug text-foreground transition-colors group-hover:text-primary sm:text-xl">
+          {article.title}
         </h3>
 
-        {/* Fallback to 'content' if 'excerpt' doesn't exist on your schema yet */}
-        <p className="line-clamp-3 text-sm leading-relaxed text-muted-foreground">
-          {a.excerpt || a.content}
+        <p className="line-clamp-3 break-words text-sm leading-relaxed text-muted-foreground">
+          {article.excerpt || article.content}
         </p>
 
-        <div className="mt-auto flex items-center gap-3 pt-4 text-[11px] font-bold uppercase tracking-widest text-muted-foreground/80">
-          {a.author && (
+        <div className="mt-auto flex min-w-0 flex-wrap items-center gap-x-2 gap-y-2 pt-3 text-[10px] font-bold uppercase tracking-wider text-muted-foreground/80 sm:gap-x-3 sm:pt-4 sm:text-[11px] sm:tracking-widest">
+          {article.author && (
             <>
-              {/* Adjust a.author depending on if it's a string or relation object like a.author.name */}
-              <span className="text-foreground/80">
-                {typeof a.author === 'string' ? a.author : a.author.name}
+              <span className="max-w-full truncate text-foreground/80">
+                {article.author.name}
               </span>
-              <span aria-hidden className="size-1 rounded-full bg-border" />
+              <span
+                aria-hidden="true"
+                className="size-1 shrink-0 rounded-full bg-border"
+              />
             </>
           )}
-          {/* Support createdAt if you are directly passing prisma models */}
-          <span>{getRelativeTime(a.createdAt || a.date)}</span>
-          <span aria-hidden className="size-1 rounded-full bg-border" />
-          <span className="inline-flex items-center gap-1.5 text-foreground/60">
+
+          <span className="whitespace-nowrap">
+            {getRelativeTime(article.createdAt)}
+          </span>
+
+          <span
+            aria-hidden="true"
+            className="size-1 shrink-0 rounded-full bg-border"
+          />
+
+          <span className="inline-flex shrink-0 items-center gap-1.5 text-foreground/60">
             <Clock className="size-3" strokeWidth={2.5} />
             3m
           </span>
@@ -83,59 +105,76 @@ function ArticleCard({ a }: { a: any }) {
   )
 }
 
-function LeagueSection({ league, articles }: { league: string; articles: any[] }) {
+function LeagueSection({
+  league,
+  articles,
+}: {
+  league: string
+  articles: Article[]
+}) {
   return (
-    <div className="relative isolate flex flex-col gap-6 pt-10 pb-8 sm:pt-16">
-      {/* LOUDER: Massive Background Text with a left-to-right fade */}
-      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-        <div className="absolute -left-4 top-0 select-none bg-gradient-to-r from-foreground/[0.07] to-transparent bg-clip-text text-[8rem] font-black uppercase leading-none tracking-tighter text-transparent sm:-left-8 sm:text-[12rem] md:text-[16rem]">
+    <section className="relative isolate min-w-0 overflow-hidden py-8 sm:py-12">
+      {/* Keep the decorative text inside each league section. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
+      >
+        <div className="absolute -left-2 top-0 max-w-full select-none truncate bg-gradient-to-r from-foreground/[0.07] to-transparent bg-clip-text text-7xl font-black uppercase leading-none tracking-tighter text-transparent sm:-left-6 sm:text-[10rem] lg:text-[14rem]">
           {league}
         </div>
       </div>
 
-      <div className="flex items-end justify-between px-2">
-        <h2 className="font-display text-3xl font-black uppercase tracking-tight text-foreground sm:text-4xl">
+      <div className="mb-5 flex min-w-0 items-end justify-between gap-3 px-1 sm:mb-6 sm:px-2">
+        <h2 className="min-w-0 truncate font-display text-2xl font-black uppercase tracking-tight text-foreground sm:text-4xl">
           {league}
         </h2>
-        <span className="mb-1 font-display text-[11px] font-bold uppercase tracking-widest text-muted-foreground">
+
+        <span className="shrink-0 font-display text-[10px] font-bold uppercase tracking-wider text-muted-foreground sm:text-[11px] sm:tracking-widest">
           {articles.length} {articles.length === 1 ? "story" : "stories"}
         </span>
       </div>
 
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {articles.map((a) => (
-          <ArticleCard key={a.id} a={a} />
+      <div className="grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
+        {articles.map((article) => (
+          <ArticleCard key={article.id} article={article} />
         ))}
       </div>
-    </div>
+    </section>
   )
 }
 
-export function ArticleFeed({ articles }: { articles: any[] }) {
-  if (!articles || articles.length === 0) {
+export function ArticleFeed({ articles }: { articles: Article[] }) {
+  if (!articles?.length) {
     return null
   }
 
-  const grouped = groupByLeague(articles)
+  const groupedArticles = groupByLeague(articles)
 
   return (
-    <section className="mx-auto max-w-7xl overflow-x-hidden px-4 py-8 sm:px-6 lg:py-12">
-      <div className="mb-4 flex items-center justify-between border-b border-border/50 pb-4">
-        <h2 className="font-display text-2xl font-black uppercase tracking-tight text-foreground">
-          Latest <span className="text-primary">Buzz</span>
-        </h2>
-        <a
-          href="#"
-          className="font-display text-xs font-bold uppercase tracking-widest text-muted-foreground transition-colors hover:text-foreground"
-        >
-          View all
-        </a>
-      </div>
+    <section className="w-full min-w-0 overflow-hidden">
+      <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8 lg:py-12">
+        <div className="mb-2 flex items-center justify-between gap-4 border-b border-border/50 pb-4">
+          <h2 className="font-display text-xl font-black uppercase tracking-tight text-foreground sm:text-2xl">
+            Latest <span className="text-primary">Buzz</span>
+          </h2>
 
-      <div className="flex flex-col gap-8 sm:gap-12">
-        {grouped.map(([league, leagueArticles]) => (
-          <LeagueSection key={league} league={league} articles={leagueArticles} />
-        ))}
+          <Link
+            href="/articles"
+            className="shrink-0 font-display text-[10px] font-bold uppercase tracking-wider text-muted-foreground transition-colors hover:text-foreground sm:text-xs sm:tracking-widest"
+          >
+            View all
+          </Link>
+        </div>
+
+        <div className="flex min-w-0 flex-col">
+          {groupedArticles.map(([league, leagueArticles]) => (
+            <LeagueSection
+              key={league}
+              league={league}
+              articles={leagueArticles}
+            />
+          ))}
+        </div>
       </div>
     </section>
   )

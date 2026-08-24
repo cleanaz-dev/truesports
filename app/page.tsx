@@ -11,24 +11,26 @@ import { fetchAllScores } from "@/lib/sports-api"
 export const revalidate = 30
 
 export default async function HomePage() {
-  const [initialGames, articles] = await Promise.all([
+  const [initialGames, articles, spotlight] = await Promise.all([
     fetchAllScores(),
-    getAllArticles()
+    getAllArticles(),
+    getSpotlight(),
   ])
 
-  const spotlight = await getSpotlight();
+  const heroArticles = articles.slice(0, 4)
+  const feedArticles = articles.slice(4)
 
   return (
-    <div className="flex min-h-screen flex-col bg-background">
-      <SiteHeader spotlight={spotlight}/>
-      <main className="flex-1">
+    <div className="flex min-h-screen min-w-0 flex-col overflow-x-hidden bg-background">
+      <SiteHeader spotlight={spotlight} />
+
+      <main className="min-w-0 flex-1">
         <Scoreboard initialGames={initialGames} />
-        
-        <HeroFeature articles={articles} />
-        <ArticleFeed articles={articles.slice(4, 16)} />
-        
+        <HeroFeature articles={heroArticles} />
+        <ArticleFeed articles={feedArticles} />
         <SocialFeed />
       </main>
+
       <SiteFooter />
     </div>
   )

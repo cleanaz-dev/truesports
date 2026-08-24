@@ -5,6 +5,9 @@ export async function getAllArticles() {
         orderBy: {
             createdAt: "desc"
         },
+        include: {
+            author: true
+        },
         take: 20
     })
 

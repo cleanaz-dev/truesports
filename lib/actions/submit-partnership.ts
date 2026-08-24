@@ -17,10 +17,10 @@ export async function submitPartnershipAction(formData: FormData) {
 
   try {
     await sendEmail({
-      to: "partnerships@truesports.com", // The inbox receiving the inquiries
+      to: "raymond@truesportslive.com", // The inbox receiving the inquiries
       subject: `Partnership Inquiry: ${company || name}`,
       react: PartnershipEmail({ name, company, email, interest, message }),
-      from: "True Sports Partnerships <noreply@truesports.com>",
+      from: process.env.FROM_EMAIL!,
       replyTo: email, // This allows you to hit "Reply" in your email client and go directly to the sender
     });
 
