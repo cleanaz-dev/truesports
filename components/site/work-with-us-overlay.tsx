@@ -4,7 +4,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { ArrowRight, X } from "lucide-react"
-import { AnimatePresence, motion } from "motion/react"
+import { AnimatePresence, motion, animate } from "motion/react"
 import { useState, useEffect } from "react"
 import { Reveal } from "./reveal"
 
@@ -75,11 +75,11 @@ function MobileLayout({ setIsVisible }: { setIsVisible: (v: boolean) => void }) 
   const [step, setStep] = useState(0)
 
   useEffect(() => {
-    // Sequence timing: 
-    // Wait 3.2s -> Show second stat group
-    // Wait 6.4s -> Show final buttons
-    const timer1 = setTimeout(() => setStep(1), 3200)
-    const timer2 = setTimeout(() => setStep(2), 6400)
+    // Sequence timing (sped up by 1s per step as requested):
+    // Wait 2.2s -> Show second stat group
+    // Wait 4.4s -> Show final buttons
+    const timer1 = setTimeout(() => setStep(1), 2200)
+    const timer2 = setTimeout(() => setStep(2), 4400)
 
     return () => {
       clearTimeout(timer1)
@@ -203,12 +203,11 @@ function MobileLayout({ setIsVisible }: { setIsVisible: (v: boolean) => void }) 
   )
 }
 
-// Small helper component to keep the mobile stat boxes clean
 function MobileStatItem({ stat }: { stat: { value: string; label: string } }) {
   return (
     <div className="flex w-full flex-col items-center justify-center rounded-xl border border-zinc-800/60 bg-zinc-900/40 py-4 text-center">
       <dd className="font-display text-2xl font-black tracking-tighter text-white sm:text-3xl">
-        {stat.value}
+        <AnimatedStat value={stat.value} />
       </dd>
       <dt className="mt-1 text-[9px] font-bold uppercase tracking-widest text-zinc-500">
         {stat.label}
@@ -219,7 +218,7 @@ function MobileStatItem({ stat }: { stat: { value: string; label: string } }) {
 
 
 // ==========================================
-// 🖥️ DESKTOP LAYOUT (Unchanged)
+// 🖥️ DESKTOP LAYOUT 
 // ==========================================
 function DesktopLayout({ setIsVisible }: { setIsVisible: (v: boolean) => void }) {
   return (
@@ -299,7 +298,8 @@ function DesktopLayout({ setIsVisible }: { setIsVisible: (v: boolean) => void })
           >
             <Reveal delay={0.5 + i * 0.1} y={15}>
               <dd className="font-display text-5xl font-black tracking-tighter text-white xl:text-6xl">
-                {stat.value}
+                {/* Desktop gets a slightly delayed start so it waits for the Reveal animation */}
+                <AnimatedStat value={stat.value} delay={0.5 + i * 0.1} />
               </dd>
               <dt className="mt-2 text-[10px] font-bold uppercase tracking-widest text-zinc-500">
                 {stat.label}
@@ -310,4 +310,42 @@ function DesktopLayout({ setIsVisible }: { setIsVisible: (v: boolean) => void })
       </div>
     </motion.aside>
   )
+}
+
+
+// ==========================================
+// 🔢 ANIMATED COUNTING NUMBER
+// ==========================================
+function AnimatedStat({ value, delay = 0 }: { value: string; delay?: number }) {
+  // Pre-calculate what to show before JS kicks in
+  const [display, setDisplay] = useState(() => {
+    const match = value.match(/([0-9.]+)([a-zA-Z]*)/)
+    return match ? `0${match[2]}` : "0" // Defaults to "0M", "0K", etc.
+  })
+
+  useEffect(() => {
+    const match = value.match(/([0-9.]+)([a-zA-Z]*)/)
+    if (!match) {
+      setDisplay(value)
+      return
+    }
+
+    const target = parseFloat(match[1])
+    const suffix = match[2] || ""
+    // Determine how many decimal points we need based on the original string (e.g. 11.89 = 2 decimals)
+    const decimals = match[1].includes(".") ? match[1].split(".")[1].length : 0
+
+    const controls = animate(0, target, {
+      duration: 1.2, // duration of the counting up animation
+      delay: delay,
+      ease: "easeOut",
+      onUpdate: (current) => {
+        setDisplay(current.toFixed(decimals) + suffix)
+      },
+    })
+
+    return () => controls.stop()
+  }, [value, delay])
+
+  return <>{display}</>
 }
