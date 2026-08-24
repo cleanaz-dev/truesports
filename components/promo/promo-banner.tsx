@@ -1,6 +1,10 @@
+"use client"
+
+import { useDrawer } from "@/context/drawer-context";
 import { Briefcase } from "lucide-react";
 
 export function PromoBanner() {
+      const { openDrawer } = useDrawer()
     return (
         <div className="group relative flex w-full flex-col justify-center overflow-hidden rounded-2xl bg-zinc-950 p-8 sm:p-10">
             {/* Background Texture/Gradient */}
@@ -18,8 +22,11 @@ export function PromoBanner() {
                     We're looking for passionate writers, video editors, and sports junkies to help build the next generation of sports media.
                 </p>
                 <div className="mt-4">
-                    <button className="rounded-sm bg-primary px-6 py-2.5 font-display text-sm font-bold uppercase tracking-widest text-primary-foreground transition-colors hover:bg-primary/90">
-                        View Open Roles
+                    <button
+                       onClick={() => openDrawer("promo")} 
+                    
+                    className="rounded-sm bg-primary px-6 py-2.5 font-display text-sm font-bold uppercase tracking-widest text-primary-foreground transition-colors hover:bg-primary/90">
+                        Get In Touch
                     </button>
                 </div>
             </div>

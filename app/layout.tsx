@@ -3,6 +3,8 @@ import type { Metadata, Viewport } from 'next'
 import { Oswald, Inter, Geist } from 'next/font/google'
 import './globals.css'
 import { cn } from "@/lib/utils"
+import { DrawerProvider } from '@/context/drawer-context'
+import { GlobalDrawer } from '@/components/global-drawer'
 
 
 const geist = Geist({ subsets: ['latin'], variable: '--font-sans' })
@@ -62,8 +64,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={cn("dark", "bg-background", oswald.variable, inter.variable, "font-sans", geist.variable)}>
       <body className="antialiased font-sans">
-     
-        {children}
+        <DrawerProvider>
+          {children}
+          <GlobalDrawer />
+        </DrawerProvider>
         {/* {process.env.NODE_ENV === 'production' && <Analytics />} */}
       </body>
     </html>

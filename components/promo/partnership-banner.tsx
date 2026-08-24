@@ -1,6 +1,9 @@
+"use client"
+import { useDrawer } from "@/context/drawer-context"
 import { Handshake, BarChart3, ArrowRight } from "lucide-react"
 
 export function PartnershipBanner() {
+    const { openDrawer } = useDrawer()
   return (
     <div className="group relative flex w-full flex-col justify-center overflow-hidden rounded-2xl bg-zinc-950 p-8 sm:p-10 shadow-lg border border-white/5">
       {/* Background Gradients */}
@@ -43,7 +46,10 @@ export function PartnershipBanner() {
 
         {/* CTA */}
         <div className="mt-2">
-          <button className="group/btn flex items-center gap-2 rounded-sm bg-white px-6 py-2.5 font-display text-sm font-bold uppercase tracking-widest text-black transition-colors hover:bg-zinc-200">
+          <button 
+            onClick={() => openDrawer("partnership")}
+          
+          className="group/btn flex items-center gap-2 rounded-sm bg-white px-6 py-2.5 font-display text-sm font-bold uppercase tracking-widest text-black transition-colors hover:bg-zinc-200">
             Request Media Kit
             <ArrowRight className="size-4 transition-transform group-hover/btn:translate-x-1" />
           </button>
