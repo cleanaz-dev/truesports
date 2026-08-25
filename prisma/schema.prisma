@@ -44,17 +44,22 @@ enum SystemTaskStatus {
 }
 
 model User {
-  id            String    @id
+  id            String   @id
   name          String
   email         String
   emailVerified Boolean
   image         String?
-  role          UserRole  @default(USER)
+  role          UserRole @default(USER)
   createdAt     DateTime
   updatedAt     DateTime
-  sessions      Session[]
-  accounts      Account[]
-  articles      Article[] // 👈 back-relation, so Prisma knows the other side
+
+  banned     Boolean   @default(false)
+  banReason  String?
+  banExpires DateTime?
+
+  sessions Session[]
+  accounts Account[]
+  articles Article[] // 👈 back-relation, so Prisma knows the other side
 
   @@unique([email])
   @@map("user")
@@ -151,56 +156,57 @@ model SystemTask {
   updatedAt   DateTime  @updatedAt
   completedAt DateTime?
 }
-model DailySpotlight {
-  id              String   @id @default(cuid())
-  date            DateTime @db.Date
-  league          String
 
-  gameId          String
-  bdlGameId       String?
-  homeTeam        String
-  awayTeam        String
+model DailySpotlight {
+  id     String   @id @default(cuid())
+  date   DateTime @db.Date
+  league String
+
+  gameId    String
+  bdlGameId String?
+  homeTeam  String
+  awayTeam  String
 
   // selection
-  selectionMode   String   @default("auto")   // 'auto' | 'manual'
-  selectionScore  Float?                       // computed score, for debugging/tuning
-  selectionReason Json?                        // { spread: 2.5, primetime: true, standingsGap: 3 } — breakdown for future admin UI
-  selectedBy      String?      
-  gameStartTime   DateTime               // null for auto, userId once admin exists
+  selectionMode   String   @default("auto") // 'auto' | 'manual'
+  selectionScore  Float? // computed score, for debugging/tuning
+  selectionReason Json? // { spread: 2.5, primetime: true, standingsGap: 3 } — breakdown for future admin UI
+  selectedBy      String?
+  gameStartTime   DateTime // null for auto, userId once admin exists
 
-  requestBudget   Int      @default(10)
-  requestsUsed    Int      @default(0)
+  requestBudget Int @default(10)
+  requestsUsed  Int @default(0)
 
-  stories         SportStory[]
+  stories SportStory[]
 
-  createdAt       DateTime @default(now())
+  createdAt DateTime @default(now())
 
   @@unique([date, league])
 }
 
 model SportStory {
-  id            String   @id @default(cuid())
+  id String @id @default(cuid())
 
-  spotlightId   String
-  spotlight     DailySpotlight @relation(fields: [spotlightId], references: [id])
+  spotlightId String
+  spotlight   DailySpotlight @relation(fields: [spotlightId], references: [id])
 
-  league        String
-  phase         String              // 'pregame' | 'live' | 'postgame'
-  audience      String              // 'stats' | 'betting'
-  tone          String              // 'editorial' | 'humor'
+  league   String
+  phase    String // 'pregame' | 'live' | 'postgame'
+  audience String // 'stats' | 'betting'
+  tone     String // 'editorial' | 'humor'
 
-  baseNarrative String?  @db.Text
+  baseNarrative String? @db.Text
   sources       Json?
-  article       String?  @db.Text
+  article       String? @db.Text
 
-  taskId        String?
-  status        String   @default("pending")
-  errorMessage  String?
+  taskId       String?
+  status       String  @default("pending")
+  errorMessage String?
 
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  publishedAt   DateTime?
-  scheduledFor  DateTime
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  publishedAt  DateTime?
+  scheduledFor DateTime
 
   @@index([spotlightId, phase])
   @@index([status])
