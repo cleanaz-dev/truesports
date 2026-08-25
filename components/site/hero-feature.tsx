@@ -25,18 +25,31 @@ export function HeroFeature({ articles }: { articles: Article[] }) {
         {/* Main feature */}
         <Link
           href={`/articles/${featured.id}`}
-          className="group relative col-span-1 flex aspect-[4/3] flex-col justify-end overflow-hidden rounded-xl border border-border lg:col-span-2 lg:aspect-auto lg:min-h-[30rem]"
+          className="group relative col-span-1 flex flex-col overflow-hidden rounded-xl border border-border lg:col-span-2 lg:min-h-[32rem] lg:justify-end"
         >
-          <Image
-            src={imageSrc}
-            alt={featured.title}
-            fill
-            priority
-            sizes="(min-width: 1024px) 66vw, 100vw"
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-transparent" />
-          <div className="relative flex flex-col gap-3 p-5 sm:p-7">
+          {/* 
+            MOBILE: 16:9 Aspect Ratio (prevents aggressive zooming/cropping)
+            DESKTOP: Absolute fill (cinematic background)
+          */}
+          <div className="relative w-full shrink-0 aspect-video overflow-hidden lg:absolute lg:inset-0 lg:aspect-auto lg:h-full">
+            <Image
+              src={imageSrc}
+              alt={featured.title}
+              fill
+              priority
+              sizes="(min-width: 1024px) 66vw, 100vw"
+              className="object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+          </div>
+
+          {/* Gradient Overlay - Desktop Only */}
+          <div className="absolute inset-0 hidden bg-gradient-to-t from-background via-background/80 to-transparent lg:block" />
+
+          {/* 
+            MOBILE: Solid background under the image
+            DESKTOP: Transparent background over the gradient
+          */}
+          <div className="relative flex flex-col gap-3 bg-background p-5 sm:p-7 lg:bg-transparent lg:p-8 xl:p-10">
             <div className="flex items-center gap-3">
               <span
                 className={`rounded-sm px-2 py-0.5 font-display text-xs font-bold uppercase tracking-wide text-primary-foreground ${
@@ -49,17 +62,20 @@ export function HeroFeature({ articles }: { articles: Article[] }) {
                 Featured
               </span>
             </div>
+            
             <h1 className="max-w-2xl text-balance font-display text-3xl font-bold leading-tight text-foreground sm:text-4xl lg:text-5xl">
               {featured.title}
             </h1>
-            <p className="max-w-xl text-pretty text-sm leading-relaxed text-foreground/80 sm:text-base line-clamp-2">
+            
+            <p className="max-w-xl line-clamp-2 text-pretty text-sm leading-relaxed text-foreground/80 sm:text-base">
               {featured.excerpt || featured.content}
             </p>
-            <div className="flex items-center gap-3 text-xs text-foreground/70">
+            
+            <div className="mt-2 flex items-center gap-3 text-xs text-foreground/70">
               {featured.author && (
                 <>
                   <span className="font-medium text-foreground">
-                    {/* {featured.author.name} */} True Sports Staff
+                    True Sports Staff
                   </span>
                   <span aria-hidden>·</span>
                 </>
@@ -95,7 +111,7 @@ export function HeroFeature({ articles }: { articles: Article[] }) {
                   >
                     {aLeague}
                   </span>
-                  <h3 className="text-pretty text-sm font-semibold leading-snug text-foreground group-hover:text-primary line-clamp-2">
+                  <h3 className="line-clamp-2 text-pretty text-sm font-semibold leading-snug text-foreground group-hover:text-primary">
                     {a.title}
                   </h3>
                   <span className="text-xs text-muted-foreground">
