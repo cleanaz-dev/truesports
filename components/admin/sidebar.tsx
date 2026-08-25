@@ -53,11 +53,7 @@ export function AdminSidebar() {
             className="mx-auto h-auto w-24"
           />
         </Link>
-      </SidebarHeader><img
-            src="/images/ts-brands/ts-logo-min-1.png"
-            alt="True Sports Logo"
-            className="mx-auto h-auto w-24"
-          />
+      </SidebarHeader>
 
       {/* CONTENT & LINKS */}
       <SidebarContent>
