@@ -35,7 +35,7 @@ export function SignInPage() {
     }
 
     // Redirect to your articles page after successful login
-    router.push("/articles");
+    router.push("/admin");
     router.refresh();
   };
 
@@ -45,7 +45,7 @@ export function SignInPage() {
 
     await signIn.social({
       provider: "google",
-      callbackURL: "/articles", // Redirect here after Google auth completes
+      callbackURL: "/admin", // Redirect here after Google auth completes
     });
     // We don't turn off loading here because the browser will redirect to Google
   };
