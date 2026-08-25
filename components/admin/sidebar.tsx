@@ -42,7 +42,7 @@ export function AdminSidebar() {
   return (
     <Sidebar variant="inset" collapsible="icon">
       {/* HEADER / LOGO */}
-      <SidebarHeader className="flex h-16 items-center justify-center border-b border-border bg-background px-4">
+      <SidebarHeader className="flex h-16 items-center justify-center border-b border-border bg-background px-4 rounded-t-md">
         <Link
           href="/admin"
           className="w-full text-center font-black italic tracking-widest text-primary uppercase"
@@ -53,7 +53,11 @@ export function AdminSidebar() {
             className="mx-auto h-auto w-24"
           />
         </Link>
-      </SidebarHeader>
+      </SidebarHeader><img
+            src="/images/ts-brands/ts-logo-min-1.png"
+            alt="True Sports Logo"
+            className="mx-auto h-auto w-24"
+          />
 
       {/* CONTENT & LINKS */}
       <SidebarContent>
@@ -79,7 +83,7 @@ export function AdminSidebar() {
                           : ""
                       }
                     >
-                      <item.icon className="h-8 w-8" />
+                      <item.icon className="size-10" />
                       <span>{item.title}</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>

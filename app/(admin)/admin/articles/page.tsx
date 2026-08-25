@@ -24,7 +24,7 @@ export default async function Page() {
         description="Manage, post, edit articles here."
         icon={Swords}
         buttons={
-          <Link href="/articles/new">
+          <Link href="articles/new">
             <Button>
               <Plus className="mr-2 h-4 w-4" />
               Create New Article

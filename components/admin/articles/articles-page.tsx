@@ -20,7 +20,7 @@ export function ArticlesPage({ userArticles }: ArticlesPageProps) {
         <p className="text-sm text-muted-foreground mb-6 max-w-sm text-center">
           You haven't written any articles yet. Create your first post to start sharing your thoughts!
         </p>
-        <Link href="/articles/new">
+        <Link href="articles/new">
           <Button>Create Your First Article</Button>
         </Link>
       </div>

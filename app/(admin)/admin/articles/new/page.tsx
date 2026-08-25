@@ -1,7 +1,7 @@
-export default async function Page() {
-    return (
-        <div>
-            New Article Page
-        </div>
-    )
+"use client";
+
+import CreateNewArticle from "@/components/admin/articles/create-article-page";
+
+export default function Page() {
+  return <CreateNewArticle />;
 }

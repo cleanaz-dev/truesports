@@ -38,16 +38,17 @@ export const auth = betterAuth({
   ],
 
   advanced: {
+    // 🔴 OLD CODE FORCED .lvh.me
+    // 🟢 NEW CODE: Only use complex cookies if we are actually in production!
     crossSubDomainCookies: {
-      enabled: true,
+      enabled: process.env.NODE_ENV === "production",
       domain:
         process.env.NODE_ENV === "production"
           ? ".true-sports.vercel.app"
-          : ".lvh.me",
+          : undefined, // Let localhost be localhost!
     },
     useSecureCookies: process.env.NODE_ENV === "production",
   },
-
   emailAndPassword: {
     enabled: true,
   },
