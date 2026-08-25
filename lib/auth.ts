@@ -22,8 +22,8 @@ export const auth = betterAuth({
       "*.lvh.me:3000",
       "true-sports.vercel.app",
       "*.true-sports.vercel.app",
-      "trueportslive.com",
-      "*.trueportslive.com",
+      "truesportslive.com",
+      "*.truesportslive.com",
     ],
     fallback: "http://localhost:3000",
   },
@@ -33,8 +33,8 @@ export const auth = betterAuth({
     "http://admin.lvh.me:3000",
     "https://admin.true-sports.vercel.app",
     "https://*.true-sports.vercel.app",
-    "https://trueportslive.com",
-    "https://*.trueportslive.com",
+    "https://truesportslive.com",
+    "https://*.truesportslive.com",
   ],
 
   advanced: {
