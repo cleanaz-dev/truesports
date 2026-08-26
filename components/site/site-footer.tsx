@@ -4,6 +4,10 @@ import Image from "next/image";
 import Link from "next/link";
 
 export function SiteFooter() {
+  const linkedinUrl =
+    SOCIALS.find((s) => s.name.toLowerCase() === "linkedin")?.url ??
+    "https://www.linkedin.com/company/true-sports-official";
+
   return (
     <footer className="border-t border-border bg-background">
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
@@ -52,7 +56,6 @@ export function SiteFooter() {
               <ul className="mt-3 flex flex-col gap-2">
                 {leagues.map((l) => (
                   <li key={l}>
-                    {/* Fixed href path & switched to Link */}
                     <Link
                       href={`/${l.toLowerCase()}`}
                       className="text-sm text-muted-foreground transition-colors hover:text-foreground"
@@ -69,16 +72,24 @@ export function SiteFooter() {
                 Company
               </h3>
               <ul className="mt-3 flex flex-col gap-2">
-                {["Work With Us"].map((c) => (
-                  <li key={c}>
-                    <Link
-                      href="/work-with-us"
-                      className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-                    >
-                      {c}
-                    </Link>
-                  </li>
-                ))}
+                <li>
+                  <Link
+                    href="/work-with-us"
+                    className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                  >
+                    Work With Us
+                  </Link>
+                </li>
+                <li>
+                  <a
+                    href={linkedinUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                  >
+                    Careers
+                  </a>
+                </li>
               </ul>
             </div>
           </div>
