@@ -1,5 +1,5 @@
 import { IconType } from "react-icons";
-import { FaInstagram, FaTwitter, FaYoutube } from "react-icons/fa";
+import { FaFacebook, FaInstagram, FaLinkedin, FaTiktok, FaTwitter, FaYoutube } from "react-icons/fa";
 
 export interface Social {
   name: string;
@@ -13,6 +13,22 @@ export const SOCIALS: Social[] = [
     url: "https://www.instagram.com/truesportslive",
     icon: FaInstagram,
   },
+  {
+    name: "Facebook",
+    url: "https://www.facebook.com/share/19Xj3jQb2b/?mibextid=wwXIfr",
+    icon: FaFacebook
+
+  },
+  {
+    name: "LinkedIn",
+    url: "https://www.linkedin.com/company/true-sports-official",
+    icon: FaLinkedin
+  },
+  {
+    name: "TikTok",
+    url: "https://www.tiktok.com/@truesportstv?_r=1&_t=ZS-99C71A1gYkL",
+    icon: FaTiktok
+  }
   // {
   //   name: "Twitter",
   //   url: "https://x.com/truesportsceo",
