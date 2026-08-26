@@ -28,7 +28,7 @@ export const SOCIALS: Social[] = [
     name: "TikTok",
     url: "https://www.tiktok.com/@truesportstv?_r=1&_t=ZS-99C71A1gYkL",
     icon: FaTiktok
-  }
+  },
   // {
   //   name: "Twitter",
   //   url: "https://x.com/truesportsceo",
