@@ -52,7 +52,7 @@ export function SiteFooter() {
                 {leagues.map((l) => (
                   <li key={l}>
                     <a
-                      href="#"
+                      href={`${l.toLocaleUpperCase}`}
                       className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                     >
                       {l}
@@ -86,7 +86,7 @@ export function SiteFooter() {
                 {["Work With Us"].map((c) => (
                   <li key={c}>
                     <a
-                      href="#"
+                      href="/work-with-us"
                       className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                     >
                       {c}
